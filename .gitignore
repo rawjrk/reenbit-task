@@ -1,6 +1,13 @@
+# default
 node_modules/
 *.log
 *.tmp
 *~
 .DS_Store
 .env
+
+# temporary data files
+data/**.json
+
+# compiled files
+dist/assets
