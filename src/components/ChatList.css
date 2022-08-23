@@ -1,0 +1,6 @@
+.chat {
+  border-bottom: 1px solid var(--border-color);
+}
+.chat:nth-last-of-type(1) {
+  border-bottom: none;
+}

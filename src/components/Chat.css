@@ -1,0 +1,26 @@
+.chat {
+  padding: var(--pane-padding);
+  display: flex;
+  position: relative;
+}
+
+.chat div {
+  padding-left: var(--pane-padding);
+}
+.chat p {
+  margin: 0;
+}
+
+.chat .profile-name {
+  font-weight: 500;
+}
+.chat .message-text {
+  font-size: 0.95em;
+  color: var(--muted-text-color);
+}
+
+.chat .message-date {
+  position: absolute;
+  right: var(--pane-padding);
+  font-size: 0.9em;
+}

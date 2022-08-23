@@ -4,7 +4,7 @@
   "description": "Test task",
   "main": "index.js",
   "scripts": {
-    "build": "webpack --mode production",
+    "build": "webpack --mode development",
     "watch": "webpack --watch --mode development",
     "seed": "node data/seeds",
     "test": "echo \"Error: no test specified\" && exit 1"

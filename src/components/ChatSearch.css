@@ -1,0 +1,30 @@
+.chat-search {
+  padding: var(--pane-padding);
+  position: relative;
+}
+
+.chat-search svg {
+  position: absolute;
+  left: calc(var(--pane-padding) * 2);
+  top: calc(var(--pane-padding) * 2);
+  color: var(--muted-text-color);
+}
+
+.chat-search input {
+  box-sizing: border-box;
+  border: 1px solid var(--border-color);
+  border-radius: 2em;
+  padding: var(--pane-padding);
+  padding-left: calc(var(--pane-padding) * 2.5);
+  width: 100%;
+}
+
+.chat-search input:focus {
+  outline: 1px solid var(--blue-grey-200);
+}
+
+
+.chat-search input::placeholder {
+  font-size: 0.9rem;
+  color: var(--muted-text-color);
+}

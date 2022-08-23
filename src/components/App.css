@@ -1,0 +1,53 @@
+:root {
+  --pane-padding: 15px;
+  --thumbnail-size: 48px;
+  --online-color: #4CAF50;
+  --header-color: #00BCD4;
+  --border-color: #E0E0E0;
+  --muted-text-color: #9E9E9E;
+  --light-bg-color: #FAFAFA;
+  --muted-bg-color: #EEEEEE;
+  --msg-primary-bg: #3d414e;
+  --msg-primary-text: #FFF;
+  --msg-secondary-bg: #E0E0E0;
+  --msg-secondary-text: #000;
+}
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  margin: 0;
+}
+
+#app {
+  display: flex;
+}
+
+#app main {
+  height: 100vh;
+}
+
+#main-pannel {
+  border-right: 1px solid var(--border-color);
+  flex-basis: calc(100vw / 3 * 1);
+}
+
+#right-pannel {
+  flex-basis: calc(100vw / 3 * 2);
+}
+
+.profile-picture {
+  width: var(--thumbnail-size);
+  height: var(--thumbnail-size);
+  border-radius: 50%;
+}
+
+#user-pannel {
+  background-color: var(--light-bg-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+#chats-header {
+  font-weight: 400;
+  color: var(--header-color);
+  padding-left: var(--pane-padding);
+}
