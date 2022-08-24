@@ -1,6 +1,7 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
-import App from './components/App'
+import App from './App'
+import "./index.css"
 
 import users from '../data/users.json'
 const chatList = users.map(user => ({

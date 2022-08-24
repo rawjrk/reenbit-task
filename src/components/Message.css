@@ -1,17 +1,20 @@
 .message {
   margin-bottom: var(--pane-padding);
+  align-self: flex-start;
 }
 
 .message .message-text {
   border-radius: 2em;
-  padding: var(--pane-padding);  
-}
-.message .message-text {
+  padding: var(--pane-padding);
   background-color: var(--msg-primary-bg);
   color: var(--msg-primary-text);
 }
-.message {
-  align-self: flex-start;
+
+.message .message-date {
+  margin-top: 5px;
+  padding-left: var(--pane-padding);
+  font-size: 0.8em;
+  color: var(--muted-text-color)
 }
 
 .message.you {
@@ -21,11 +24,4 @@
 .message.you .message-text {
   background-color: var(--msg-secondary-bg);
   color: var(--msg-secondary-text);
-}
-
-.message .message-date {
-  margin-top: 5px;
-  padding-left: var(--pane-padding);
-  font-size: 0.8em;
-  color: var(--muted-text-color)
 }

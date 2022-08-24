@@ -1,0 +1,29 @@
+#new-message {
+  background-color: var(--light-bg-color);
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: var(--pane-padding);
+}
+
+#new-message input {
+  box-sizing: border-box;
+  margin: var(--pane-padding);
+  width: 100%;
+  padding: var(--pane-padding);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  font-size: 1rem;
+}
+
+#new-message input::placeholder {
+  color: var(--muted-text-color);
+}
+
+#new-message button {
+  position: absolute;
+  right: calc(var(--pane-padding) * 2.5);
+  border: none;
+  background-color: #fff;
+  color: var(--muted-text-color);
+}

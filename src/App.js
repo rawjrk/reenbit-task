@@ -1,8 +1,9 @@
 import { Component } from "react";
-import ProfileInfo from "./ProfileInfo";
-import ChatSearch from "./ChatSearch";
-import ChatList from "./ChatList";
-import MessageList from "./MessageList";
+import ProfileInfo from "./components/ProfileInfo";
+import ChatSearch from "./components/ChatSearch";
+import ChatList from "./components/ChatList";
+import MessageList from "./components/MessageList";
+import NewMessage from "./components/NewMessage";
 import "./App.css"
 
 class App extends Component {
@@ -13,6 +14,7 @@ class App extends Component {
     }
     this.onChatSearch = this.onChatSearch.bind(this)
     this.onChatSelect = this.onChatSelect.bind(this)
+    this.onNewMessage = this.onNewMessage.bind(this)
   }
 
   onChatSearch(e) {
@@ -23,6 +25,13 @@ class App extends Component {
   onChatSelect(chatSelected) {
     this.setState({ chatSelected })
     alert(`Chat selected: ${chatSelected}`)
+  }
+
+  onNewMessage(e) {
+    e.preventDefault()
+    const newMessage = e.target.querySelector('#message-input')
+    alert(`New message sent: ${newMessage.value}`)
+    newMessage.value = ''
   }
 
   render() {
@@ -38,7 +47,9 @@ class App extends Component {
           <ChatList chats={chats} onSelect={this.onChatSelect} />
         </main>
         <main id="right-pannel">
-          <MessageList messages={messages} />
+          <ProfileInfo {...currentUser} />
+          <MessageList messages={messages} currentUserId={currentUser.id} />
+          <NewMessage onSend={this.onNewMessage} />
         </main>
       </>
     )

@@ -1,5 +1,8 @@
 #message-list {
+  height: 100%;
+  border-bottom: 1px solid var(--border-color);
   padding: var(--pane-padding);
   display: flex;
   flex-direction: column;
+  background-color: var(--msg-block-bg);
 }
