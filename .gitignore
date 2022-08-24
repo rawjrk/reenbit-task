@@ -8,6 +8,3 @@ node_modules/
 
 # temporary data files
 data/**.json
-
-# compiled files
-dist/assets

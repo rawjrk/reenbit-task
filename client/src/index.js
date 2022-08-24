@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 import App from './App'
 import "./index.css"
 
-import users from '../data/users.json'
+import users from '../../data/users.json'
 const chatList = users.map(user => ({
   user,
   message: {
@@ -16,7 +16,7 @@ const currentUser = {
   name: null,
   picture: 'assets/images/no-profile-picture.jpg',
 }
-import messages from '../data/messages.json'
+import messages from '../../data/messages.json'
 
 window.React = React
 const container = document.getElementById('app')
