@@ -6,7 +6,7 @@ const ChatList = ({ chats, onSelect=f=>f }) =>
     {chats.map((chat, i) =>
       <Chat key={i}
           user={chat.user}
-          message={chat.message}
+          message={chat.recentMessage}
           onClick={() => onSelect(chat.user.id)} />
       )}
   </section>
