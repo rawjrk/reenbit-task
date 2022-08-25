@@ -19,9 +19,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_ProfileInfo__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/ProfileInfo */ "./src/components/ProfileInfo.js");
 /* harmony import */ var _components_ChatSearch__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/ChatSearch */ "./src/components/ChatSearch.js");
 /* harmony import */ var _components_ChatList__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/ChatList */ "./src/components/ChatList.js");
-/* harmony import */ var _components_MessageList__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/MessageList */ "./src/components/MessageList.js");
-/* harmony import */ var _components_NewMessage__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/NewMessage */ "./src/components/NewMessage.js");
-/* harmony import */ var _App_css__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./App.css */ "./src/App.css");
+/* harmony import */ var _components_MessagePanel__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/MessagePanel */ "./src/components/MessagePanel.js");
+/* harmony import */ var _App_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./App.css */ "./src/App.css");
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -52,7 +51,6 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
-
 var App = /*#__PURE__*/function (_Component) {
   _inherits(App, _Component);
 
@@ -66,29 +64,16 @@ var App = /*#__PURE__*/function (_Component) {
     _this = _super.call(this, props);
     _this.state = {
       loading: true,
-      chatSelected: null
+      currentUser: {
+        name: null,
+        picture: null
+      },
+      chats: [],
+      conversation: []
     };
     _this.onChatSearch = _this.onChatSearch.bind(_assertThisInitialized(_this));
     _this.onChatSelect = _this.onChatSelect.bind(_assertThisInitialized(_this));
     _this.onNewMessage = _this.onNewMessage.bind(_assertThisInitialized(_this));
-    _this.currentUser = {
-      id: 'you',
-      name: null,
-      picture: 'assets/images/no-profile-picture.jpg'
-    };
-    _this.messages = [{
-      "userId": "384af8d7-af80-4de5-962b-d799a1a14ae3",
-      "text": "Quickly come to the meeting room 1B, we have a big server issue",
-      "date": "4/22/17, 4:00AM"
-    }, {
-      "userId": "you",
-      "text": "I'm having breakfast right now, can't you wait for 10 minutes?",
-      "date": "4/22/17, 4:05 AM"
-    }, {
-      "userId": "384af8d7-af80-4de5-962b-d799a1a14ae3",
-      "text": "We are loosing money! Quick!",
-      "date": "4/22/17, 4:10 AM"
-    }];
     return _this;
   }
 
@@ -99,11 +84,14 @@ var App = /*#__PURE__*/function (_Component) {
 
       isomorphic_fetch__WEBPACK_IMPORTED_MODULE_1___default()('/chats').then(function (response) {
         return response.json();
-      }).then(function (chatList) {
-        _this2.chatList = chatList;
+      }).then(function (data) {
+        var currentUser = data.currentUser,
+            chats = data.chats;
 
         _this2.setState({
-          loading: false
+          loading: false,
+          currentUser: currentUser,
+          chats: chats
         });
       });
     }
@@ -116,10 +104,15 @@ var App = /*#__PURE__*/function (_Component) {
   }, {
     key: "onChatSelect",
     value: function onChatSelect(chatSelected) {
-      this.setState({
-        chatSelected: chatSelected
+      var _this3 = this;
+
+      isomorphic_fetch__WEBPACK_IMPORTED_MODULE_1___default()("/messages/".concat(chatSelected)).then(function (response) {
+        return response.json();
+      }).then(function (conversation) {
+        _this3.setState({
+          conversation: conversation
+        });
       });
-      alert("Chat selected: ".concat(chatSelected));
     }
   }, {
     key: "onNewMessage",
@@ -132,30 +125,33 @@ var App = /*#__PURE__*/function (_Component) {
   }, {
     key: "render",
     value: function render() {
-      var loading = this.state.loading;
-      if (loading) return /*#__PURE__*/React.createElement("p", null, "Loading...");
-      var currentUser = this.currentUser,
-          chatList = this.chatList,
-          messages = this.messages;
-      return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("main", {
-        id: "main-pannel"
-      }, /*#__PURE__*/React.createElement("header", {
-        id: "user-pannel"
-      }, /*#__PURE__*/React.createElement(_components_ProfileInfo__WEBPACK_IMPORTED_MODULE_2__["default"], currentUser), /*#__PURE__*/React.createElement(_components_ChatSearch__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      if (this.state.loading) {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "Loading...");
+      }
+
+      var _this$state = this.state,
+          currentUser = _this$state.currentUser,
+          chats = _this$state.chats,
+          conversation = _this$state.conversation;
+      var onNewMessage = this.onNewMessage;
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("main", {
+        id: "chat-panel"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("header", {
+        id: "user-panel"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_ProfileInfo__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        user: currentUser
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_ChatSearch__WEBPACK_IMPORTED_MODULE_3__["default"], {
         onSubmit: this.onChatSearch
-      })), /*#__PURE__*/React.createElement("h2", {
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h2", {
         id: "chats-header"
-      }, "Chats"), /*#__PURE__*/React.createElement(_components_ChatList__WEBPACK_IMPORTED_MODULE_4__["default"], {
-        chats: chatList,
+      }, "Chats"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_ChatList__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        chats: chats,
         onSelect: this.onChatSelect
-      })), /*#__PURE__*/React.createElement("main", {
-        id: "right-pannel"
-      }, /*#__PURE__*/React.createElement(_components_ProfileInfo__WEBPACK_IMPORTED_MODULE_2__["default"], currentUser), /*#__PURE__*/React.createElement(_components_MessageList__WEBPACK_IMPORTED_MODULE_5__["default"], {
-        messages: messages,
-        currentUserId: currentUser.id
-      }), /*#__PURE__*/React.createElement(_components_NewMessage__WEBPACK_IMPORTED_MODULE_6__["default"], {
-        onSend: this.onNewMessage
-      })));
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_MessagePanel__WEBPACK_IMPORTED_MODULE_5__["default"], {
+        currentUser: currentUser,
+        conversation: conversation,
+        onNewMessage: onNewMessage
+      }));
     }
   }]);
 
@@ -177,31 +173,38 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _Chat_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Chat.css */ "./src/components/Chat.css");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _Chat_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Chat.css */ "./src/components/Chat.css");
+
 
 
 var Chat = function Chat(_ref) {
   var user = _ref.user,
       message = _ref.message,
-      _ref$onClick = _ref.onClick,
-      onClick = _ref$onClick === void 0 ? function (f) {
-    return f;
-  } : _ref$onClick;
-  return /*#__PURE__*/React.createElement("div", {
+      onClick = _ref.onClick;
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "chat",
-    onClick: onClick
-  }, /*#__PURE__*/React.createElement("img", {
+    onClick: onClick,
+    role: "button"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
     src: user.picture,
-    className: "profile-picture"
-  }), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("p", {
+    className: "profile-picture",
+    alt: "profile"
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", {
     className: "profile-name"
-  }, user.name), /*#__PURE__*/React.createElement("p", {
+  }, user.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", {
     className: "message-text"
-  }, message.text)), /*#__PURE__*/React.createElement("p", {
-    className: "message-date"
-  }, message.date));
+  }, message.text)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", {
+    className: "sent-on"
+  }, message.sentOn));
 };
 
+Chat.defaultProps = {
+  onClick: function onClick(f) {
+    return f;
+  }
+};
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Chat);
 
 /***/ }),
@@ -217,8 +220,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _Chat__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Chat */ "./src/components/Chat.js");
-/* harmony import */ var _ChatList_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ChatList.css */ "./src/components/ChatList.css");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _Chat__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Chat */ "./src/components/Chat.js");
+/* harmony import */ var _ChatList_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ChatList.css */ "./src/components/ChatList.css");
+
 
 
 
@@ -228,10 +234,10 @@ var ChatList = function ChatList(_ref) {
       onSelect = _ref$onSelect === void 0 ? function (f) {
     return f;
   } : _ref$onSelect;
-  return /*#__PURE__*/React.createElement("section", {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("section", {
     id: "chat-list"
   }, chats.map(function (chat, i) {
-    return /*#__PURE__*/React.createElement(_Chat__WEBPACK_IMPORTED_MODULE_0__["default"], {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_Chat__WEBPACK_IMPORTED_MODULE_1__["default"], {
       key: i,
       user: chat.user,
       message: chat.recentMessage,
@@ -257,7 +263,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _ChatSearch_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ChatSearch.css */ "./src/components/ChatSearch.css");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _ChatSearch_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ChatSearch.css */ "./src/components/ChatSearch.css");
+
 
 
 var ChatSearch = function ChatSearch(_ref) {
@@ -265,19 +274,19 @@ var ChatSearch = function ChatSearch(_ref) {
       onSubmit = _ref$onSubmit === void 0 ? function (f) {
     return f;
   } : _ref$onSubmit;
-  return /*#__PURE__*/React.createElement("form", {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("form", {
     id: "chat-search",
     onSubmit: onSubmit
-  }, /*#__PURE__*/React.createElement("svg", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
     xmlns: "http://www.w3.org/2000/svg",
     width: "16",
     height: "16",
     fill: "currentColor",
     className: "bi bi-search",
     viewBox: "0 0 16 16"
-  }, /*#__PURE__*/React.createElement("path", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
     d: "M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
-  })), /*#__PURE__*/React.createElement("input", {
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
     placeholder: "Search or start new chat"
   }));
 };
@@ -297,20 +306,27 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _Message_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Message.css */ "./src/components/Message.css");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _utils_dt__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/dt */ "./src/utils/dt.js");
+/* harmony import */ var _Message_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Message.css */ "./src/components/Message.css");
+
+
 
 
 var Message = function Message(_ref) {
   var text = _ref.text,
-      date = _ref.date,
+      sentOn = _ref.sentOn,
       isCurrentUser = _ref.isCurrentUser;
-  return /*#__PURE__*/React.createElement("section", {
-    className: "message" + (isCurrentUser ? " you" : "")
-  }, /*#__PURE__*/React.createElement("div", {
+  var msgClass = 'message';
+  if (isCurrentUser) msgClass += ' from-current-user';
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("section", {
+    className: msgClass
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "message-text"
-  }, text), /*#__PURE__*/React.createElement("div", {
-    className: "message-date"
-  }, date));
+  }, text), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    className: "sent-on"
+  }, (0,_utils_dt__WEBPACK_IMPORTED_MODULE_1__.datetimeToMessageFormat)(sentOn)));
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Message);
@@ -328,9 +344,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _Message__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Message */ "./src/components/Message.js");
-/* harmony import */ var _MessageList_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./MessageList.css */ "./src/components/MessageList.css");
-function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _Message__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Message */ "./src/components/Message.js");
+/* harmony import */ var _MessageList_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./MessageList.css */ "./src/components/MessageList.css");
 
 
 
@@ -338,14 +355,15 @@ function _extends() { _extends = Object.assign ? Object.assign.bind() : function
 var MessageList = function MessageList(_ref) {
   var messages = _ref.messages,
       currentUserId = _ref.currentUserId;
-  return /*#__PURE__*/React.createElement("div", {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     id: "message-list"
   }, messages.map(function (msg, i) {
-    return /*#__PURE__*/React.createElement(_Message__WEBPACK_IMPORTED_MODULE_0__["default"], _extends({
-      key: i
-    }, msg, {
-      isCurrentUser: msg.userId === currentUserId
-    }));
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_Message__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      key: i,
+      text: msg.text,
+      sentOn: msg.sentOn,
+      isCurrentUser: msg.fromUser === currentUserId
+    });
   }));
 };
 
@@ -353,10 +371,10 @@ var MessageList = function MessageList(_ref) {
 
 /***/ }),
 
-/***/ "./src/components/NewMessage.js":
-/*!**************************************!*\
-  !*** ./src/components/NewMessage.js ***!
-  \**************************************/
+/***/ "./src/components/MessagePanel.js":
+/*!****************************************!*\
+  !*** ./src/components/MessagePanel.js ***!
+  \****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -364,34 +382,96 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _NewMessage_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./NewMessage.css */ "./src/components/NewMessage.css");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _ProfileInfo__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ProfileInfo */ "./src/components/ProfileInfo.js");
+/* harmony import */ var _MessageList__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./MessageList */ "./src/components/MessageList.js");
+/* harmony import */ var _NewMessageForm__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./NewMessageForm */ "./src/components/NewMessageForm.js");
+/* harmony import */ var _MessagePanel_css__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./MessagePanel.css */ "./src/components/MessagePanel.css");
 
 
-var NewMessage = function NewMessage(_ref) {
+
+
+
+
+var MessagePanel = function MessagePanel(_ref) {
+  var currentUser = _ref.currentUser,
+      conversation = _ref.conversation,
+      _ref$onNewMessage = _ref.onNewMessage,
+      onNewMessage = _ref$onNewMessage === void 0 ? function (f) {
+    return f;
+  } : _ref$onNewMessage;
+
+  if (conversation.length < 1) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      id: "message-panel"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", {
+      className: "empty"
+    }, "Select a chat to start messaging..."));
+  }
+
+  var user = conversation.user,
+      messages = conversation.messages;
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("main", {
+    id: "message-panel"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_ProfileInfo__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    user: user
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_MessageList__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    messages: messages,
+    currentUserId: currentUser.id
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_NewMessageForm__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    onSend: onNewMessage
+  }));
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (MessagePanel);
+
+/***/ }),
+
+/***/ "./src/components/NewMessageForm.js":
+/*!******************************************!*\
+  !*** ./src/components/NewMessageForm.js ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _NewMessageForm_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./NewMessageForm.css */ "./src/components/NewMessageForm.css");
+
+
+
+var NewMessageForm = function NewMessageForm(_ref) {
   var _ref$onSend = _ref.onSend,
       onSend = _ref$onSend === void 0 ? function (f) {
     return f;
   } : _ref$onSend;
-  return /*#__PURE__*/React.createElement("form", {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("form", {
     id: "new-message",
     onSubmit: onSend
-  }, /*#__PURE__*/React.createElement("input", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
     id: "message-input",
     type: "text",
     placeholder: "Type your message"
-  }), /*#__PURE__*/React.createElement("button", null, /*#__PURE__*/React.createElement("svg", {
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+    type: "submit"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
     xmlns: "http://www.w3.org/2000/svg",
     width: "24px",
     height: "24px",
     fill: "currentColor",
     className: "bi bi-send",
     viewBox: "0 0 24 24"
-  }, /*#__PURE__*/React.createElement("path", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
     d: "M4.01,6.03 L11.52,9.25 L4,8.25 L4.01,6.03 Z M11.51,14.75 L4,17.97 L4,15.75 L11.51,14.75 Z M2.01,3 L2,10 L17,12 L2,14 L2.01,21 L23,12 L2.01,3 Z"
   }))));
 };
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (NewMessage);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (NewMessageForm);
 
 /***/ }),
 
@@ -406,23 +486,67 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _ProfileInfo_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ProfileInfo.css */ "./src/components/ProfileInfo.css");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _ProfileInfo_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ProfileInfo.css */ "./src/components/ProfileInfo.css");
+
 
 
 var ProfileInfo = function ProfileInfo(_ref) {
-  var name = _ref.name,
-      picture = _ref.picture;
-  return /*#__PURE__*/React.createElement("div", {
+  var user = _ref.user;
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "profile-info"
-  }, /*#__PURE__*/React.createElement("img", {
-    src: picture,
-    className: "profile-picture"
-  }), /*#__PURE__*/React.createElement("h2", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
+    src: user.picture || '',
+    className: "profile-picture",
+    alt: "profile"
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h2", {
     className: "profile-name"
-  }, name));
+  }, user.name));
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ProfileInfo);
+
+/***/ }),
+
+/***/ "./src/utils/dt.js":
+/*!*************************!*\
+  !*** ./src/utils/dt.js ***!
+  \*************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "datetimeToChatFormat": () => (/* binding */ datetimeToChatFormat),
+/* harmony export */   "datetimeToMessageFormat": () => (/* binding */ datetimeToMessageFormat)
+/* harmony export */ });
+var formatDatetime = function formatDatetime(date, options) {
+  if (typeof date === 'string') {
+    date = new Date(date);
+  }
+
+  return date.toLocaleString('en-US', options);
+};
+
+var bindFormat = function bindFormat(options) {
+  return function (date) {
+    return formatDatetime(date, options);
+  };
+};
+
+var datetimeToMessageFormat = bindFormat({
+  year: '2-digit',
+  month: 'numeric',
+  day: 'numeric',
+  hour: 'numeric',
+  minute: '2-digit'
+});
+var datetimeToChatFormat = bindFormat({
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric'
+});
 
 /***/ }),
 
@@ -446,7 +570,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "#app {\r\n  display: flex;\r\n}\r\n\r\n#app main {\r\n  height: 100vh;\r\n  border-right: 1px solid var(--border-color);\r\n}\r\n\r\n#app main:nth-last-of-type(1) {\r\n  border-right: none;\r\n}\r\n\r\n\r\n.profile-picture {\r\n  width: var(--thumbnail-size);\r\n  height: var(--thumbnail-size);\r\n  border-radius: 50%;\r\n}\r\n\r\n.message-text {\r\n  font-size: 0.95rem;\r\n}\r\n\r\ninput:focus {\r\n  outline: 1px solid var(--muted-text-color);\r\n}\r\n\r\n\r\n#main-pannel {\r\n  flex-basis: calc(100vw / 3 * 1);\r\n}\r\n\r\n#right-pannel {\r\n  flex-basis: calc(100vw / 3 * 2);\r\n  display: flex;\r\n  flex-direction: column;\r\n}\r\n\r\n#right-pannel .profile-info {\r\n  background-color: var(--light-bg-color);\r\n  border-bottom: 1px solid var(--border-color);\r\n}\r\n\r\n#user-pannel {\r\n  background-color: var(--light-bg-color);\r\n  border-bottom: 1px solid var(--border-color);\r\n}\r\n\r\n#chats-header {\r\n  font-weight: 400;\r\n  color: var(--header-color);\r\n  padding-left: var(--pane-padding);\r\n}", "",{"version":3,"sources":["webpack://./src/App.css"],"names":[],"mappings":"AAAA;EACE,aAAa;AACf;;AAEA;EACE,aAAa;EACb,2CAA2C;AAC7C;;AAEA;EACE,kBAAkB;AACpB;;;AAGA;EACE,4BAA4B;EAC5B,6BAA6B;EAC7B,kBAAkB;AACpB;;AAEA;EACE,kBAAkB;AACpB;;AAEA;EACE,0CAA0C;AAC5C;;;AAGA;EACE,+BAA+B;AACjC;;AAEA;EACE,+BAA+B;EAC/B,aAAa;EACb,sBAAsB;AACxB;;AAEA;EACE,uCAAuC;EACvC,4CAA4C;AAC9C;;AAEA;EACE,uCAAuC;EACvC,4CAA4C;AAC9C;;AAEA;EACE,gBAAgB;EAChB,0BAA0B;EAC1B,iCAAiC;AACnC","sourcesContent":["#app {\r\n  display: flex;\r\n}\r\n\r\n#app main {\r\n  height: 100vh;\r\n  border-right: 1px solid var(--border-color);\r\n}\r\n\r\n#app main:nth-last-of-type(1) {\r\n  border-right: none;\r\n}\r\n\r\n\r\n.profile-picture {\r\n  width: var(--thumbnail-size);\r\n  height: var(--thumbnail-size);\r\n  border-radius: 50%;\r\n}\r\n\r\n.message-text {\r\n  font-size: 0.95rem;\r\n}\r\n\r\ninput:focus {\r\n  outline: 1px solid var(--muted-text-color);\r\n}\r\n\r\n\r\n#main-pannel {\r\n  flex-basis: calc(100vw / 3 * 1);\r\n}\r\n\r\n#right-pannel {\r\n  flex-basis: calc(100vw / 3 * 2);\r\n  display: flex;\r\n  flex-direction: column;\r\n}\r\n\r\n#right-pannel .profile-info {\r\n  background-color: var(--light-bg-color);\r\n  border-bottom: 1px solid var(--border-color);\r\n}\r\n\r\n#user-pannel {\r\n  background-color: var(--light-bg-color);\r\n  border-bottom: 1px solid var(--border-color);\r\n}\r\n\r\n#chats-header {\r\n  font-weight: 400;\r\n  color: var(--header-color);\r\n  padding-left: var(--pane-padding);\r\n}"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "#app {\r\n  display: flex;\r\n  width: 100vw;\r\n  height: 100vh;\r\n}\r\n\r\n#app main {\r\n  height: 100vh;\r\n}\r\n\r\n#app .loading {\r\n  align-self: center;\r\n  justify-self: center;\r\n  margin: auto;\r\n}\r\n\r\n.profile-picture {\r\n  width: var(--thumbnail-size);\r\n  height: var(--thumbnail-size);\r\n  border-radius: 50%;\r\n}\r\n\r\n.message-text {\r\n  font-size: 0.95rem;\r\n}\r\n\r\ninput:focus {\r\n  outline: 1px solid var(--muted-text-color);\r\n}\r\n\r\n#chat-panel {\r\n  flex-basis: calc(100vw / 3 * 1);\r\n  border-right: 1px solid var(--border-color);\r\n}\r\n\r\n#user-panel {\r\n  background-color: var(--light-bg-color);\r\n  border-bottom: 1px solid var(--border-color);\r\n}\r\n\r\n#chats-header {\r\n  font-weight: 400;\r\n  color: var(--header-color);\r\n  padding-left: var(--pane-padding);\r\n}", "",{"version":3,"sources":["webpack://./src/App.css"],"names":[],"mappings":"AAAA;EACE,aAAa;EACb,YAAY;EACZ,aAAa;AACf;;AAEA;EACE,aAAa;AACf;;AAEA;EACE,kBAAkB;EAClB,oBAAoB;EACpB,YAAY;AACd;;AAEA;EACE,4BAA4B;EAC5B,6BAA6B;EAC7B,kBAAkB;AACpB;;AAEA;EACE,kBAAkB;AACpB;;AAEA;EACE,0CAA0C;AAC5C;;AAEA;EACE,+BAA+B;EAC/B,2CAA2C;AAC7C;;AAEA;EACE,uCAAuC;EACvC,4CAA4C;AAC9C;;AAEA;EACE,gBAAgB;EAChB,0BAA0B;EAC1B,iCAAiC;AACnC","sourcesContent":["#app {\r\n  display: flex;\r\n  width: 100vw;\r\n  height: 100vh;\r\n}\r\n\r\n#app main {\r\n  height: 100vh;\r\n}\r\n\r\n#app .loading {\r\n  align-self: center;\r\n  justify-self: center;\r\n  margin: auto;\r\n}\r\n\r\n.profile-picture {\r\n  width: var(--thumbnail-size);\r\n  height: var(--thumbnail-size);\r\n  border-radius: 50%;\r\n}\r\n\r\n.message-text {\r\n  font-size: 0.95rem;\r\n}\r\n\r\ninput:focus {\r\n  outline: 1px solid var(--muted-text-color);\r\n}\r\n\r\n#chat-panel {\r\n  flex-basis: calc(100vw / 3 * 1);\r\n  border-right: 1px solid var(--border-color);\r\n}\r\n\r\n#user-panel {\r\n  background-color: var(--light-bg-color);\r\n  border-bottom: 1px solid var(--border-color);\r\n}\r\n\r\n#chats-header {\r\n  font-weight: 400;\r\n  color: var(--header-color);\r\n  padding-left: var(--pane-padding);\r\n}"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -473,7 +597,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".chat {\r\n  padding: var(--pane-padding);\r\n  display: flex;\r\n  position: relative;\r\n}\r\n\r\n.chat div {\r\n  padding-left: var(--pane-padding);\r\n}\r\n.chat p {\r\n  margin: 0;\r\n}\r\n\r\n.chat .profile-name {\r\n  font-weight: 500;\r\n}\r\n.chat .message-text {\r\n  color: var(--muted-text-color);\r\n}\r\n\r\n.chat .message-date {\r\n  position: absolute;\r\n  right: var(--pane-padding);\r\n  font-size: 0.9em;\r\n}", "",{"version":3,"sources":["webpack://./src/components/Chat.css"],"names":[],"mappings":"AAAA;EACE,4BAA4B;EAC5B,aAAa;EACb,kBAAkB;AACpB;;AAEA;EACE,iCAAiC;AACnC;AACA;EACE,SAAS;AACX;;AAEA;EACE,gBAAgB;AAClB;AACA;EACE,8BAA8B;AAChC;;AAEA;EACE,kBAAkB;EAClB,0BAA0B;EAC1B,gBAAgB;AAClB","sourcesContent":[".chat {\r\n  padding: var(--pane-padding);\r\n  display: flex;\r\n  position: relative;\r\n}\r\n\r\n.chat div {\r\n  padding-left: var(--pane-padding);\r\n}\r\n.chat p {\r\n  margin: 0;\r\n}\r\n\r\n.chat .profile-name {\r\n  font-weight: 500;\r\n}\r\n.chat .message-text {\r\n  color: var(--muted-text-color);\r\n}\r\n\r\n.chat .message-date {\r\n  position: absolute;\r\n  right: var(--pane-padding);\r\n  font-size: 0.9em;\r\n}"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, ".chat {\r\n  padding: var(--pane-padding);\r\n  display: flex;\r\n  position: relative;\r\n}\r\n\r\n.chat div {\r\n  padding-left: var(--pane-padding);\r\n}\r\n.chat p {\r\n  margin: 0;\r\n}\r\n\r\n.chat .profile-name {\r\n  font-weight: 500;\r\n}\r\n.chat .message-text {\r\n  color: var(--muted-text-color);\r\n}\r\n\r\n.chat .sent-on {\r\n  font-size: 500;\r\n  position: absolute;\r\n  right: var(--pane-padding);\r\n  font-size: 0.9em;\r\n}", "",{"version":3,"sources":["webpack://./src/components/Chat.css"],"names":[],"mappings":"AAAA;EACE,4BAA4B;EAC5B,aAAa;EACb,kBAAkB;AACpB;;AAEA;EACE,iCAAiC;AACnC;AACA;EACE,SAAS;AACX;;AAEA;EACE,gBAAgB;AAClB;AACA;EACE,8BAA8B;AAChC;;AAEA;EACE,cAAc;EACd,kBAAkB;EAClB,0BAA0B;EAC1B,gBAAgB;AAClB","sourcesContent":[".chat {\r\n  padding: var(--pane-padding);\r\n  display: flex;\r\n  position: relative;\r\n}\r\n\r\n.chat div {\r\n  padding-left: var(--pane-padding);\r\n}\r\n.chat p {\r\n  margin: 0;\r\n}\r\n\r\n.chat .profile-name {\r\n  font-weight: 500;\r\n}\r\n.chat .message-text {\r\n  color: var(--muted-text-color);\r\n}\r\n\r\n.chat .sent-on {\r\n  font-size: 500;\r\n  position: absolute;\r\n  right: var(--pane-padding);\r\n  font-size: 0.9em;\r\n}"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -554,7 +678,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".message {\r\n  margin-bottom: var(--pane-padding);\r\n  align-self: flex-start;\r\n}\r\n\r\n.message .message-text {\r\n  border-radius: 2em;\r\n  padding: var(--pane-padding);\r\n  background-color: var(--msg-primary-bg);\r\n  color: var(--msg-primary-text);\r\n}\r\n\r\n.message .message-date {\r\n  margin-top: 5px;\r\n  padding-left: var(--pane-padding);\r\n  font-size: 0.8em;\r\n  color: var(--muted-text-color)\r\n}\r\n\r\n.message.you {\r\n  align-self: flex-end;\r\n  text-align: right;\r\n}\r\n.message.you .message-text {\r\n  background-color: var(--msg-secondary-bg);\r\n  color: var(--msg-secondary-text);\r\n}", "",{"version":3,"sources":["webpack://./src/components/Message.css"],"names":[],"mappings":"AAAA;EACE,kCAAkC;EAClC,sBAAsB;AACxB;;AAEA;EACE,kBAAkB;EAClB,4BAA4B;EAC5B,uCAAuC;EACvC,8BAA8B;AAChC;;AAEA;EACE,eAAe;EACf,iCAAiC;EACjC,gBAAgB;EAChB;AACF;;AAEA;EACE,oBAAoB;EACpB,iBAAiB;AACnB;AACA;EACE,yCAAyC;EACzC,gCAAgC;AAClC","sourcesContent":[".message {\r\n  margin-bottom: var(--pane-padding);\r\n  align-self: flex-start;\r\n}\r\n\r\n.message .message-text {\r\n  border-radius: 2em;\r\n  padding: var(--pane-padding);\r\n  background-color: var(--msg-primary-bg);\r\n  color: var(--msg-primary-text);\r\n}\r\n\r\n.message .message-date {\r\n  margin-top: 5px;\r\n  padding-left: var(--pane-padding);\r\n  font-size: 0.8em;\r\n  color: var(--muted-text-color)\r\n}\r\n\r\n.message.you {\r\n  align-self: flex-end;\r\n  text-align: right;\r\n}\r\n.message.you .message-text {\r\n  background-color: var(--msg-secondary-bg);\r\n  color: var(--msg-secondary-text);\r\n}"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, ".message {\r\n  margin-bottom: var(--pane-padding);\r\n  align-self: flex-start;\r\n}\r\n\r\n.message .message-text {\r\n  border-radius: 2em;\r\n  padding: var(--pane-padding);\r\n  background-color: var(--msg-primary-bg);\r\n  color: var(--msg-primary-text);\r\n}\r\n\r\n.message .sent-on {\r\n  margin-top: 5px;\r\n  padding-left: var(--pane-padding);\r\n  font-size: 0.8em;\r\n  color: var(--muted-text-color)\r\n}\r\n\r\n.message.from-current-user {\r\n  align-self: flex-end;\r\n  text-align: right;\r\n}\r\n.message.from-current-user .message-text {\r\n  background-color: var(--msg-secondary-bg);\r\n  color: var(--msg-secondary-text);\r\n}\r\n\r\n.message.from-current-user img {\r\n  display: none;\r\n}", "",{"version":3,"sources":["webpack://./src/components/Message.css"],"names":[],"mappings":"AAAA;EACE,kCAAkC;EAClC,sBAAsB;AACxB;;AAEA;EACE,kBAAkB;EAClB,4BAA4B;EAC5B,uCAAuC;EACvC,8BAA8B;AAChC;;AAEA;EACE,eAAe;EACf,iCAAiC;EACjC,gBAAgB;EAChB;AACF;;AAEA;EACE,oBAAoB;EACpB,iBAAiB;AACnB;AACA;EACE,yCAAyC;EACzC,gCAAgC;AAClC;;AAEA;EACE,aAAa;AACf","sourcesContent":[".message {\r\n  margin-bottom: var(--pane-padding);\r\n  align-self: flex-start;\r\n}\r\n\r\n.message .message-text {\r\n  border-radius: 2em;\r\n  padding: var(--pane-padding);\r\n  background-color: var(--msg-primary-bg);\r\n  color: var(--msg-primary-text);\r\n}\r\n\r\n.message .sent-on {\r\n  margin-top: 5px;\r\n  padding-left: var(--pane-padding);\r\n  font-size: 0.8em;\r\n  color: var(--muted-text-color)\r\n}\r\n\r\n.message.from-current-user {\r\n  align-self: flex-end;\r\n  text-align: right;\r\n}\r\n.message.from-current-user .message-text {\r\n  background-color: var(--msg-secondary-bg);\r\n  color: var(--msg-secondary-text);\r\n}\r\n\r\n.message.from-current-user img {\r\n  display: none;\r\n}"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -588,10 +712,10 @@ ___CSS_LOADER_EXPORT___.push([module.id, "#message-list {\r\n  height: 100%;\r\n
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/dist/cjs.js!./src/components/NewMessage.css":
-/*!*****************************************************************************!*\
-  !*** ./node_modules/css-loader/dist/cjs.js!./src/components/NewMessage.css ***!
-  \*****************************************************************************/
+/***/ "./node_modules/css-loader/dist/cjs.js!./src/components/MessagePanel.css":
+/*!*******************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js!./src/components/MessagePanel.css ***!
+  \*******************************************************************************/
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -608,7 +732,34 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "#new-message {\r\n  background-color: var(--light-bg-color);\r\n  position: relative;\r\n  display: flex;\r\n  align-items: center;\r\n  padding: var(--pane-padding);\r\n}\r\n\r\n#new-message input {\r\n  box-sizing: border-box;\r\n  margin: var(--pane-padding);\r\n  width: 100%;\r\n  padding: var(--pane-padding);\r\n  border: 1px solid var(--border-color);\r\n  border-radius: 20px;\r\n  font-size: 1rem;\r\n}\r\n\r\n#new-message input::placeholder {\r\n  color: var(--muted-text-color);\r\n}\r\n\r\n#new-message button {\r\n  position: absolute;\r\n  right: calc(var(--pane-padding) * 2.5);\r\n  border: none;\r\n  background-color: #fff;\r\n  color: var(--muted-text-color);\r\n}", "",{"version":3,"sources":["webpack://./src/components/NewMessage.css"],"names":[],"mappings":"AAAA;EACE,uCAAuC;EACvC,kBAAkB;EAClB,aAAa;EACb,mBAAmB;EACnB,4BAA4B;AAC9B;;AAEA;EACE,sBAAsB;EACtB,2BAA2B;EAC3B,WAAW;EACX,4BAA4B;EAC5B,qCAAqC;EACrC,mBAAmB;EACnB,eAAe;AACjB;;AAEA;EACE,8BAA8B;AAChC;;AAEA;EACE,kBAAkB;EAClB,sCAAsC;EACtC,YAAY;EACZ,sBAAsB;EACtB,8BAA8B;AAChC","sourcesContent":["#new-message {\r\n  background-color: var(--light-bg-color);\r\n  position: relative;\r\n  display: flex;\r\n  align-items: center;\r\n  padding: var(--pane-padding);\r\n}\r\n\r\n#new-message input {\r\n  box-sizing: border-box;\r\n  margin: var(--pane-padding);\r\n  width: 100%;\r\n  padding: var(--pane-padding);\r\n  border: 1px solid var(--border-color);\r\n  border-radius: 20px;\r\n  font-size: 1rem;\r\n}\r\n\r\n#new-message input::placeholder {\r\n  color: var(--muted-text-color);\r\n}\r\n\r\n#new-message button {\r\n  position: absolute;\r\n  right: calc(var(--pane-padding) * 2.5);\r\n  border: none;\r\n  background-color: #fff;\r\n  color: var(--muted-text-color);\r\n}"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "#message-panel {\r\n  flex-basis: calc(100vw / 3 * 2);\r\n  display: flex;\r\n  flex-direction: column;\r\n}\r\n\r\n#message-panel .profile-info {\r\n  background-color: var(--light-bg-color);\r\n  border-bottom: 1px solid var(--border-color);\r\n}\r\n\r\n#message-panel .empty {\r\n  align-self: center;\r\n  justify-self: center;\r\n  margin: auto;\r\n  padding: var(--pane-padding);\r\n  border-radius: 2em;\r\n  background-color: var(--msg-secondary-bg);\r\n}", "",{"version":3,"sources":["webpack://./src/components/MessagePanel.css"],"names":[],"mappings":"AAAA;EACE,+BAA+B;EAC/B,aAAa;EACb,sBAAsB;AACxB;;AAEA;EACE,uCAAuC;EACvC,4CAA4C;AAC9C;;AAEA;EACE,kBAAkB;EAClB,oBAAoB;EACpB,YAAY;EACZ,4BAA4B;EAC5B,kBAAkB;EAClB,yCAAyC;AAC3C","sourcesContent":["#message-panel {\r\n  flex-basis: calc(100vw / 3 * 2);\r\n  display: flex;\r\n  flex-direction: column;\r\n}\r\n\r\n#message-panel .profile-info {\r\n  background-color: var(--light-bg-color);\r\n  border-bottom: 1px solid var(--border-color);\r\n}\r\n\r\n#message-panel .empty {\r\n  align-self: center;\r\n  justify-self: center;\r\n  margin: auto;\r\n  padding: var(--pane-padding);\r\n  border-radius: 2em;\r\n  background-color: var(--msg-secondary-bg);\r\n}"],"sourceRoot":""}]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/cjs.js!./src/components/NewMessageForm.css":
+/*!*********************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js!./src/components/NewMessageForm.css ***!
+  \*********************************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/sourceMaps.js */ "./node_modules/css-loader/dist/runtime/sourceMaps.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);
+// Imports
+
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, "#new-message {\r\n  background-color: var(--light-bg-color);\r\n  position: relative;\r\n  display: flex;\r\n  align-items: center;\r\n  padding: var(--pane-padding);\r\n}\r\n\r\n#new-message input {\r\n  box-sizing: border-box;\r\n  margin: var(--pane-padding);\r\n  width: 100%;\r\n  padding: var(--pane-padding);\r\n  border: 1px solid var(--border-color);\r\n  border-radius: 20px;\r\n  font-size: 1rem;\r\n}\r\n\r\n#new-message input::placeholder {\r\n  color: var(--muted-text-color);\r\n}\r\n\r\n#new-message button {\r\n  position: absolute;\r\n  right: calc(var(--pane-padding) * 2.5);\r\n  border: none;\r\n  background-color: #fff;\r\n  color: var(--muted-text-color);\r\n}", "",{"version":3,"sources":["webpack://./src/components/NewMessageForm.css"],"names":[],"mappings":"AAAA;EACE,uCAAuC;EACvC,kBAAkB;EAClB,aAAa;EACb,mBAAmB;EACnB,4BAA4B;AAC9B;;AAEA;EACE,sBAAsB;EACtB,2BAA2B;EAC3B,WAAW;EACX,4BAA4B;EAC5B,qCAAqC;EACrC,mBAAmB;EACnB,eAAe;AACjB;;AAEA;EACE,8BAA8B;AAChC;;AAEA;EACE,kBAAkB;EAClB,sCAAsC;EACtC,YAAY;EACZ,sBAAsB;EACtB,8BAA8B;AAChC","sourcesContent":["#new-message {\r\n  background-color: var(--light-bg-color);\r\n  position: relative;\r\n  display: flex;\r\n  align-items: center;\r\n  padding: var(--pane-padding);\r\n}\r\n\r\n#new-message input {\r\n  box-sizing: border-box;\r\n  margin: var(--pane-padding);\r\n  width: 100%;\r\n  padding: var(--pane-padding);\r\n  border: 1px solid var(--border-color);\r\n  border-radius: 20px;\r\n  font-size: 1rem;\r\n}\r\n\r\n#new-message input::placeholder {\r\n  color: var(--muted-text-color);\r\n}\r\n\r\n#new-message button {\r\n  position: absolute;\r\n  right: calc(var(--pane-padding) * 2.5);\r\n  border: none;\r\n  background-color: #fff;\r\n  color: var(--muted-text-color);\r\n}"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -34538,10 +34689,10 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 
 /***/ }),
 
-/***/ "./src/components/NewMessage.css":
-/*!***************************************!*\
-  !*** ./src/components/NewMessage.css ***!
-  \***************************************/
+/***/ "./src/components/MessagePanel.css":
+/*!*****************************************!*\
+  !*** ./src/components/MessagePanel.css ***!
+  \*****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -34561,7 +34712,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/styleTagTransform.js */ "./node_modules/style-loader/dist/runtime/styleTagTransform.js");
 /* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _node_modules_css_loader_dist_cjs_js_NewMessage_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! !!../../node_modules/css-loader/dist/cjs.js!./NewMessage.css */ "./node_modules/css-loader/dist/cjs.js!./src/components/NewMessage.css");
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_MessagePanel_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! !!../../node_modules/css-loader/dist/cjs.js!./MessagePanel.css */ "./node_modules/css-loader/dist/cjs.js!./src/components/MessagePanel.css");
 
       
       
@@ -34583,12 +34734,67 @@ options.setAttributes = (_node_modules_style_loader_dist_runtime_setAttributesWi
 options.domAPI = (_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default());
 options.insertStyleElement = (_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default());
 
-var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_NewMessage_css__WEBPACK_IMPORTED_MODULE_6__["default"], options);
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_MessagePanel_css__WEBPACK_IMPORTED_MODULE_6__["default"], options);
 
 
 
 
-       /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_NewMessage_css__WEBPACK_IMPORTED_MODULE_6__["default"] && _node_modules_css_loader_dist_cjs_js_NewMessage_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals ? _node_modules_css_loader_dist_cjs_js_NewMessage_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals : undefined);
+       /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_MessagePanel_css__WEBPACK_IMPORTED_MODULE_6__["default"] && _node_modules_css_loader_dist_cjs_js_MessagePanel_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals ? _node_modules_css_loader_dist_cjs_js_MessagePanel_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals : undefined);
+
+
+/***/ }),
+
+/***/ "./src/components/NewMessageForm.css":
+/*!*******************************************!*\
+  !*** ./src/components/NewMessageForm.css ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/styleDomAPI.js */ "./node_modules/style-loader/dist/runtime/styleDomAPI.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/insertBySelector.js */ "./node_modules/style-loader/dist/runtime/insertBySelector.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js */ "./node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/insertStyleElement.js */ "./node_modules/style-loader/dist/runtime/insertStyleElement.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/styleTagTransform.js */ "./node_modules/style-loader/dist/runtime/styleTagTransform.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_NewMessageForm_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! !!../../node_modules/css-loader/dist/cjs.js!./NewMessageForm.css */ "./node_modules/css-loader/dist/cjs.js!./src/components/NewMessageForm.css");
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+var options = {};
+
+options.styleTagTransform = (_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default());
+options.setAttributes = (_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default());
+
+      options.insert = _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default().bind(null, "head");
+    
+options.domAPI = (_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default());
+options.insertStyleElement = (_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default());
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_NewMessageForm_css__WEBPACK_IMPORTED_MODULE_6__["default"], options);
+
+
+
+
+       /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_NewMessageForm_css__WEBPACK_IMPORTED_MODULE_6__["default"] && _node_modules_css_loader_dist_cjs_js_NewMessageForm_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals ? _node_modules_css_loader_dist_cjs_js_NewMessageForm_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals : undefined);
 
 
 /***/ }),
@@ -35740,12 +35946,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
- // const currentUser = {
-//   id: 'you',
-//   name: null,
-//   picture: 'assets/images/no-profile-picture.jpg',
-// }
-// import messages from '../../data/messages.json'
 
 window.React = (react__WEBPACK_IMPORTED_MODULE_0___default());
 var container = document.getElementById('app');

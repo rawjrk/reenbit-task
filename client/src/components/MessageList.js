@@ -8,8 +8,8 @@ const MessageList = ({ messages, currentUserId }) => (
       <Message
         key={i}
         text={msg.text}
-        date={msg.date}
-        isCurrentUser={msg.userId === currentUserId}
+        sentOn={msg.sentOn}
+        isCurrentUser={msg.fromUser === currentUserId}
       />
     ))}
   </div>

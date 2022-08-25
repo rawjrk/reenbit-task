@@ -10,18 +10,22 @@
   color: var(--msg-primary-text);
 }
 
-.message .message-date {
+.message .sent-on {
   margin-top: 5px;
   padding-left: var(--pane-padding);
   font-size: 0.8em;
   color: var(--muted-text-color)
 }
 
-.message.you {
+.message.from-current-user {
   align-self: flex-end;
   text-align: right;
 }
-.message.you .message-text {
+.message.from-current-user .message-text {
   background-color: var(--msg-secondary-bg);
   color: var(--msg-secondary-text);
+}
+
+.message.from-current-user img {
+  display: none;
 }

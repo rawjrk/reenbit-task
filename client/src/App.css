@@ -1,14 +1,17 @@
 #app {
   display: flex;
+  width: 100vw;
+  height: 100vh;
 }
 
 #app main {
   height: 100vh;
-  border-right: 1px solid var(--border-color);
 }
 
-#app main:nth-last-of-type(1) {
-  border-right: none;
+#app .loading {
+  align-self: center;
+  justify-self: center;
+  margin: auto;
 }
 
 .profile-picture {
@@ -25,23 +28,12 @@ input:focus {
   outline: 1px solid var(--muted-text-color);
 }
 
-
-#main-pannel {
+#chat-panel {
   flex-basis: calc(100vw / 3 * 1);
+  border-right: 1px solid var(--border-color);
 }
 
-#right-pannel {
-  flex-basis: calc(100vw / 3 * 2);
-  display: flex;
-  flex-direction: column;
-}
-
-#right-pannel .profile-info {
-  background-color: var(--light-bg-color);
-  border-bottom: 1px solid var(--border-color);
-}
-
-#user-pannel {
+#user-panel {
   background-color: var(--light-bg-color);
   border-bottom: 1px solid var(--border-color);
 }

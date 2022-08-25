@@ -1,7 +1,7 @@
 import React from 'react';
-import './NewMessage.css';
+import './NewMessageForm.css';
 
-const NewMessage = ({ onSend = f => f }) => (
+const NewMessageForm = ({ onSend = f => f }) => (
   <form id="new-message" onSubmit={onSend}>
     <input id="message-input" type="text" placeholder="Type your message" />
     <button type="submit">
@@ -12,4 +12,4 @@ const NewMessage = ({ onSend = f => f }) => (
   </form>
 );
 
-export default NewMessage;
+export default NewMessageForm;

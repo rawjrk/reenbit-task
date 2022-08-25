@@ -3,8 +3,7 @@ import fetch from 'isomorphic-fetch';
 import ProfileInfo from './components/ProfileInfo';
 import ChatSearch from './components/ChatSearch';
 import ChatList from './components/ChatList';
-import MessageList from './components/MessageList';
-import NewMessage from './components/NewMessage';
+import MessagePanel from './components/MessagePanel';
 import './App.css';
 
 class App extends Component {
@@ -12,43 +11,24 @@ class App extends Component {
     super(props);
     this.state = {
       loading: true,
-      chatSelected: null,
+      currentUser: {
+        name: null,
+        picture: null,
+      },
+      chats: [],
+      conversation: [],
     };
     this.onChatSearch = this.onChatSearch.bind(this);
     this.onChatSelect = this.onChatSelect.bind(this);
     this.onNewMessage = this.onNewMessage.bind(this);
-
-    this.currentUser = {
-      id: 'you',
-      name: null,
-      picture: 'assets/images/no-profile-picture.jpg',
-    };
-
-    this.messages = [
-      {
-        userId: '384af8d7-af80-4de5-962b-d799a1a14ae3',
-        text: 'Quickly come to the meeting room 1B, we have a big server issue',
-        date: '4/22/17, 4:00AM',
-      },
-      {
-        userId: 'you',
-        text: "I'm having breakfast right now, can't you wait for 10 minutes?",
-        date: '4/22/17, 4:05 AM',
-      },
-      {
-        userId: '384af8d7-af80-4de5-962b-d799a1a14ae3',
-        text: 'We are loosing money! Quick!',
-        date: '4/22/17, 4:10 AM',
-      },
-    ];
   }
 
   componentDidMount() {
     fetch('/chats')
       .then(response => response.json())
-      .then(chatList => {
-        this.chatList = chatList;
-        this.setState({ loading: false });
+      .then(data => {
+        const { currentUser, chats } = data;
+        this.setState({ loading: false, currentUser, chats });
       });
   }
 
@@ -58,8 +38,11 @@ class App extends Component {
   }
 
   onChatSelect(chatSelected) {
-    this.setState({ chatSelected });
-    alert(`Chat selected: ${chatSelected}`);
+    fetch(`/messages/${chatSelected}`)
+      .then(response => response.json())
+      .then(conversation => {
+        this.setState({ conversation });
+      });
   }
 
   onNewMessage(e) {
@@ -70,25 +53,28 @@ class App extends Component {
   }
 
   render() {
-    const { loading } = this.state;
-    if (loading) return (<p>Loading...</p>);
+    if (this.state.loading) {
+      return <div>Loading...</div>;
+    }
 
-    const { currentUser, chatList, messages } = this;
+    const { currentUser, chats, conversation } = this.state;
+    const { onNewMessage } = this;
+
     return (
       <>
-        <main id="main-pannel">
-          <header id="user-pannel">
-            <ProfileInfo name={currentUser.name} picture={currentUser.picture} />
+        <main id="chat-panel">
+          <header id="user-panel">
+            <ProfileInfo user={currentUser} />
             <ChatSearch onSubmit={this.onChatSearch} />
           </header>
           <h2 id="chats-header">Chats</h2>
-          <ChatList chats={chatList} onSelect={this.onChatSelect} />
+          <ChatList chats={chats} onSelect={this.onChatSelect} />
         </main>
-        <main id="right-pannel">
-          <ProfileInfo name={currentUser.name} picture={currentUser.picture} />
-          <MessageList messages={messages} currentUserId={currentUser.id} />
-          <NewMessage onSend={this.onNewMessage} />
-        </main>
+        <MessagePanel
+          currentUser={currentUser}
+          conversation={conversation}
+          onNewMessage={onNewMessage}
+        />
       </>
     );
   }
