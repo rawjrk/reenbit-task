@@ -1,8 +1,8 @@
 {
   "name": "client",
   "scripts": {
-    "build": "webpack --mode development",
-    "watch": "webpack --watch --mode development",
+    "build": "webpack --mode production",
+    "dev": "webpack --watch --mode development",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
