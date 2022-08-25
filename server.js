@@ -11,20 +11,19 @@ app.get('/messages/:userId', (req, res) => {
   const { userId } = req.params;
   const messages = JSON.parse(fs.readFileSync('data/messages.json'));
   const conversation = messages.filter(msg =>
-      msg.fromUser === userId ||
-      msg.toUser === userId);
-  res.send(conversation)
+    msg.fromUser === userId || msg.toUser === userId);
+  res.send(conversation);
 });
 
 app.get('/chats', (req, res) => {
   const users = JSON.parse(fs.readFileSync('data/users.json'));
-  const contacts = users.filter(user => user.id !== "literally-me");
+  const contacts = users.filter(user => user.id !== 'literally-me');
   const chatList = contacts.map(user => ({
     user,
     recentMessage: {
       text: 'Lorem ipsum',
-      date: 'Aug 22, 2022'
-    }
+      date: 'Aug 22, 2022',
+    },
   }));
   res.send(chatList);
 });
