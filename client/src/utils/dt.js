@@ -1,4 +1,5 @@
-const formatDatetime = (dt, options) => {
+const formatDatetime = (datetime, options) => {
+  let dt = datetime;
   if (typeof dt === 'string') {
     dt = new Date(dt);
   }

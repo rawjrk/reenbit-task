@@ -1,0 +1,46 @@
+.message {
+  display: flex;
+  position: relative;
+  margin-bottom: calc(var(--pane-padding) * 2);
+}
+
+.message.incoming {
+  align-self: flex-start;
+}
+
+.message.outcoming {
+  align-self: flex-end;
+}
+
+.message > .message-text {
+  border-radius: 2em;
+  padding: var(--pane-padding);
+}
+
+.message.incoming > .message-text {
+  background-color: var(--msg-primary-bg);
+  color: var(--msg-primary-text);
+  margin-left: calc(var(--pane-padding) * 0.5);
+}
+
+.message.outcoming > .message-text {
+  background-color: var(--msg-secondary-bg);
+  color: var(--msg-secondary-text);
+}
+
+.message > .sent-on {
+  margin-top: 5px;
+  font-size: 0.8em;
+  color: var(--muted-text-color);
+  position: absolute;
+  bottom: calc(var(--pane-padding) * -1.5);
+  white-space: nowrap;
+}
+
+.message.incoming > .sent-on {
+  left: calc(var(--thumbnail-size) + var(--pane-padding) * 1.5);
+}
+
+.message.outcoming > .sent-on {
+  right: 0px;
+}

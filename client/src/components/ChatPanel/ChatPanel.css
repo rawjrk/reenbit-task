@@ -1,0 +1,15 @@
+#chat-panel {
+  flex-basis: calc(100vw / 3 * 1);
+  border-right: 1px solid var(--border-color);
+}
+
+#user-panel {
+  background-color: var(--light-bg-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+#chats-header {
+  font-weight: 400;
+  color: var(--header-color);
+  padding-left: var(--pane-padding);
+}

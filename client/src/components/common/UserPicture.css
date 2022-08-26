@@ -1,0 +1,5 @@
+.user-picture {
+  width: var(--thumbnail-size);
+  height: var(--thumbnail-size);
+  border-radius: 50%;
+}

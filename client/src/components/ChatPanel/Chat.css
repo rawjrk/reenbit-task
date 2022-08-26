@@ -19,7 +19,6 @@
 }
 
 .chat .sent-on {
-  font-size: 500;
   position: absolute;
   right: var(--pane-padding);
   font-size: 0.9em;

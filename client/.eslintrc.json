@@ -22,6 +22,7 @@
     "react/jsx-filename-extension": ["error", { "extensions": [".js", ".jsx"] }],
     "arrow-parens": ["error", "as-needed"],
     "react/function-component-definition": ["error", { "namedComponents": "arrow-function" }],
+    "object-curly-newline": ["error", { "consistent": true }],
 
     // revisit when working build is complete
     "react/prop-types": ["off"],

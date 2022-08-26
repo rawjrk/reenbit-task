@@ -1,9 +1,8 @@
-const path = require('path');
-const fs = require('fs');
 const { getFakeUsers, formatFakeUsers } = require('./fakeUsers');
+const { writeData } = require('../manip');
 
-const usersFile = path.join(__dirname, '../users.json');
-const messagesFile = path.join(__dirname, '../messages.json');
+// const usersFile = path.join(__dirname, '../users.json');
+// const messagesFile = path.join(__dirname, '../messages.json');
 
 const currentUser = {
   'id': 'literally-me',
@@ -14,7 +13,8 @@ const currentUser = {
 getFakeUsers(5)
     .then(res => formatFakeUsers(res))
     .then(users => {
-      fs.writeFileSync(usersFile, JSON.stringify([...users, currentUser], null, 2));
+      writeData('users', [...users, currentUser]);
+
       console.log('Seeded users successfully!');
 
       const messages = [];
@@ -42,7 +42,7 @@ getFakeUsers(5)
         });
       });
 
-      fs.writeFileSync(messagesFile, JSON.stringify(messages, null, 2));
+      writeData('messages', messages);
       console.log('Seeded messages successfully!');
     })
     .catch(err => {
