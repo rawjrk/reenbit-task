@@ -15,9 +15,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _utils_request__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/request */ "./src/utils/request.js");
-/* harmony import */ var _ChatPanel__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ChatPanel */ "./src/components/ChatPanel/index.js");
-/* harmony import */ var _MessagePanel__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./MessagePanel */ "./src/components/MessagePanel/index.js");
-/* harmony import */ var _App_css__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./App.css */ "./src/components/App.css");
+/* harmony import */ var _utils_session__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/session */ "./src/utils/session.js");
+/* harmony import */ var _ChatPanel__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ChatPanel */ "./src/components/ChatPanel/index.js");
+/* harmony import */ var _MessagePanel__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./MessagePanel */ "./src/components/MessagePanel/index.js");
+/* harmony import */ var _App_css__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./App.css */ "./src/components/App.css");
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
@@ -58,6 +59,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
+
 var App = /*#__PURE__*/function (_Component) {
   _inherits(App, _Component);
 
@@ -68,16 +70,17 @@ var App = /*#__PURE__*/function (_Component) {
 
     _classCallCheck(this, App);
 
-    _this = _super.call(this, props); // static parameters, so initialized from props
-
+    _this = _super.call(this, props);
     var _this$props = _this.props,
         currentUser = _this$props.currentUser,
         chats = _this$props.chats;
+    var selectedUser = (0,_utils_session__WEBPACK_IMPORTED_MODULE_2__.sessionRetrieve)('selectedUser') || null;
+    var messages = (0,_utils_session__WEBPACK_IMPORTED_MODULE_2__.sessionRetrieve)('messages') || [];
     _this.state = {
       currentUser: currentUser,
       chats: chats,
-      selectedUser: null,
-      messages: [],
+      selectedUser: selectedUser,
+      messages: messages,
       searching: false,
       searchMatch: []
     };
@@ -146,6 +149,9 @@ var App = /*#__PURE__*/function (_Component) {
           selectedUser: user,
           messages: messages
         });
+
+        (0,_utils_session__WEBPACK_IMPORTED_MODULE_2__.sessionSave)('selectedUser', user);
+        (0,_utils_session__WEBPACK_IMPORTED_MODULE_2__.sessionSave)('messages', messages);
       });
       this.lastMessageRef = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.createRef)();
     }
@@ -195,12 +201,12 @@ var App = /*#__PURE__*/function (_Component) {
           onChatSelect = this.onChatSelect,
           onChatSearch = this.onChatSearch,
           lastMessageRef = this.lastMessageRef;
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_ChatPanel__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_ChatPanel__WEBPACK_IMPORTED_MODULE_3__["default"], {
         currentUser: currentUser,
         chats: searching ? searchMatch : chats,
         onSelect: onChatSelect,
         onSearch: onChatSearch
-      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_MessagePanel__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_MessagePanel__WEBPACK_IMPORTED_MODULE_4__["default"], {
         currentUser: currentUser,
         selectedUser: selectedUser,
         messages: messages,
@@ -914,6 +920,24 @@ var postMessage = /*#__PURE__*/function () {
     return _ref5.apply(this, arguments);
   };
 }();
+
+/***/ }),
+
+/***/ "./src/utils/session.js":
+/*!******************************!*\
+  !*** ./src/utils/session.js ***!
+  \******************************/
+/***/ ((module) => {
+
+module.exports.sessionRetrieve = function (key) {
+  var data = sessionStorage.getItem(key);
+  return JSON.parse(data);
+};
+
+module.exports.sessionSave = function (key, data) {
+  var dataStr = JSON.stringify(data);
+  sessionStorage.setItem(key, dataStr);
+};
 
 /***/ }),
 

@@ -1,5 +1,6 @@
 import React, { Component, createRef } from 'react';
 import { getSearch, getMessages, postMessage } from '../utils/request';
+import { sessionRetrieve, sessionSave } from '../utils/session';
 import ChatPanel from './ChatPanel';
 import MessagePanel from './MessagePanel';
 import './App.css';
@@ -8,14 +9,15 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    // static parameters, so initialized from props
     const { currentUser, chats } = this.props;
+    const selectedUser = sessionRetrieve('selectedUser') || null;
+    const messages = sessionRetrieve('messages') || [];
 
     this.state = {
       currentUser,
       chats,
-      selectedUser: null,
-      messages: [],
+      selectedUser,
+      messages,
       searching: false,
       searchMatch: [],
     };
@@ -62,6 +64,8 @@ class App extends Component {
     getMessages(userId).then(data => {
       const { user, messages } = data;
       this.setState({ selectedUser: user, messages });
+      sessionSave('selectedUser', user);
+      sessionSave('messages', messages);
     });
     this.lastMessageRef = createRef();
   }
