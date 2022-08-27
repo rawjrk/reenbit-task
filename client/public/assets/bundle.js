@@ -68,62 +68,80 @@ var App = /*#__PURE__*/function (_Component) {
 
     _classCallCheck(this, App);
 
-    _this = _super.call(this, props);
+    _this = _super.call(this, props); // static parameters, so initialized from props
+
+    var _this$props = _this.props,
+        currentUser = _this$props.currentUser,
+        chats = _this$props.chats;
     _this.state = {
-      loading: true,
-      currentUser: null,
-      chats: [],
+      searching: false,
+      currentUser: currentUser,
+      chats: chats,
       selectedUser: null,
-      messages: [],
-      conversation: []
+      messages: []
     };
     _this.onChatSearch = _this.onChatSearch.bind(_assertThisInitialized(_this));
     _this.onChatSelect = _this.onChatSelect.bind(_assertThisInitialized(_this));
     _this.onNewMessage = _this.onNewMessage.bind(_assertThisInitialized(_this));
+    _this.lastMessageRef = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.createRef)();
     return _this;
   }
 
   _createClass(App, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      var _this2 = this;
+      var messages = this.state.messages;
+      var lastMessage = this.lastMessageRef.current;
 
-      (0,_utils_request__WEBPACK_IMPORTED_MODULE_1__.getChats)().then(function (data) {
-        var currentUser = data.currentUser,
-            chats = data.chats;
+      if (messages.length > 0) {
+        lastMessage.scrollIntoView();
+      }
+    }
+  }, {
+    key: "componentDidUpdate",
+    value: function componentDidUpdate(prevProps, prevState) {
+      var messages = this.state.messages;
+      var lastMessage = this.lastMessageRef.current;
 
-        _this2.setState({
-          loading: false,
-          currentUser: currentUser,
-          chats: chats
-        });
-      });
+      if (messages !== prevState.messages) {
+        lastMessage.scrollIntoView();
+      }
     }
   }, {
     key: "onChatSearch",
-    value: function onChatSearch(e) {
+    value: function onChatSearch(e, inputElem) {
       e.preventDefault();
-      alert('Search started');
+
+      if (!inputElem.value) {
+        // this.setState({ searching: false })
+        return;
+      }
+
+      var queryStr = inputElem.value;
+      (0,_utils_request__WEBPACK_IMPORTED_MODULE_1__.getSearch)(queryStr).then(function (data) {
+        console.log('Search:', data);
+      });
     }
   }, {
     key: "onChatSelect",
     value: function onChatSelect(userId) {
-      var _this3 = this;
+      var _this2 = this;
 
       (0,_utils_request__WEBPACK_IMPORTED_MODULE_1__.getMessages)(userId).then(function (data) {
         var user = data.user,
             messages = data.messages;
 
-        _this3.setState({
+        _this2.setState({
           selectedUser: user,
           messages: messages
         });
       });
+      this.lastMessageRef = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.createRef)();
     }
   }, {
     key: "onNewMessage",
     value: function onNewMessage(e, inputElem, toUser) {
-      var _this4 = this;
+      var _this3 = this;
 
       e.preventDefault();
       if (!inputElem.value) return;
@@ -137,10 +155,13 @@ var App = /*#__PURE__*/function (_Component) {
         sentOn: new Date()
       };
       inputElem.value = '';
+      this.setState({
+        messages: [].concat(_toConsumableArray(messages), [newMessage])
+      });
       (0,_utils_request__WEBPACK_IMPORTED_MODULE_1__.postMessage)(newMessage).then(function (body) {
         var reply = body.reply;
 
-        _this4.setState({
+        _this3.setState({
           messages: [].concat(_toConsumableArray(messages), [newMessage, reply])
         });
       });
@@ -159,7 +180,8 @@ var App = /*#__PURE__*/function (_Component) {
           messages = _this$state2.messages;
       var onNewMessage = this.onNewMessage,
           onChatSelect = this.onChatSelect,
-          onChatSearch = this.onChatSearch;
+          onChatSearch = this.onChatSearch,
+          lastMessageRef = this.lastMessageRef;
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_ChatPanel__WEBPACK_IMPORTED_MODULE_2__["default"], {
         currentUser: currentUser,
         chats: chats,
@@ -169,7 +191,8 @@ var App = /*#__PURE__*/function (_Component) {
         currentUser: currentUser,
         selectedUser: selectedUser,
         messages: messages,
-        onNewMessage: onNewMessage
+        onNewMessage: onNewMessage,
+        lastMessageRef: lastMessageRef
       }));
     }
   }]);
@@ -203,7 +226,10 @@ __webpack_require__.r(__webpack_exports__);
 var Chat = function Chat(_ref) {
   var user = _ref.user,
       message = _ref.message,
-      onClick = _ref.onClick;
+      _ref$onClick = _ref.onClick,
+      onClick = _ref$onClick === void 0 ? function (f) {
+    return f;
+  } : _ref$onClick;
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "chat",
     onClick: onClick,
@@ -221,11 +247,6 @@ var Chat = function Chat(_ref) {
   }, (0,_utils_dt__WEBPACK_IMPORTED_MODULE_1__.datetimeToChatFormat)(message.sentOn)));
 };
 
-Chat.defaultProps = {
-  onClick: function onClick(f) {
-    return f;
-  }
-};
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Chat);
 
 /***/ }),
@@ -287,7 +308,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _common_ProfileInfo__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../common/ProfileInfo */ "./src/components/common/ProfileInfo.js");
-/* harmony import */ var _ChatSearch__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ChatSearch */ "./src/components/ChatPanel/ChatSearch.js");
+/* harmony import */ var _ChatSearchForm__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ChatSearchForm */ "./src/components/ChatPanel/ChatSearchForm.js");
 /* harmony import */ var _ChatList__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ChatList */ "./src/components/ChatPanel/ChatList.js");
 /* harmony import */ var _ChatPanel_css__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ChatPanel.css */ "./src/components/ChatPanel/ChatPanel.css");
 
@@ -313,8 +334,8 @@ var ChatPanel = function ChatPanel(_ref) {
     id: "user-panel"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_common_ProfileInfo__WEBPACK_IMPORTED_MODULE_1__["default"], {
     user: currentUser
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_ChatSearch__WEBPACK_IMPORTED_MODULE_2__["default"], {
-    onSubmit: onSearch
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_ChatSearchForm__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    onSearch: onSearch
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h2", {
     id: "chats-header"
   }, "Chats"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_ChatList__WEBPACK_IMPORTED_MODULE_3__["default"], {
@@ -327,10 +348,10 @@ var ChatPanel = function ChatPanel(_ref) {
 
 /***/ }),
 
-/***/ "./src/components/ChatPanel/ChatSearch.js":
-/*!************************************************!*\
-  !*** ./src/components/ChatPanel/ChatSearch.js ***!
-  \************************************************/
+/***/ "./src/components/ChatPanel/ChatSearchForm.js":
+/*!****************************************************!*\
+  !*** ./src/components/ChatPanel/ChatSearchForm.js ***!
+  \****************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -340,18 +361,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _ChatSearch_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ChatSearch.css */ "./src/components/ChatPanel/ChatSearch.css");
+/* harmony import */ var _ChatSearchForm_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ChatSearchForm.css */ "./src/components/ChatPanel/ChatSearchForm.css");
 
 
 
-var ChatSearch = function ChatSearch(_ref) {
-  var _ref$onSubmit = _ref.onSubmit,
-      onSubmit = _ref$onSubmit === void 0 ? function (f) {
+var ChatSearchForm = function ChatSearchForm(_ref) {
+  var _ref$onSearch = _ref.onSearch,
+      onSearch = _ref$onSearch === void 0 ? function (f) {
     return f;
-  } : _ref$onSubmit;
+  } : _ref$onSearch;
+  var inputRef = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("form", {
     id: "chat-search",
-    onSubmit: onSubmit
+    onSubmit: function onSubmit(e) {
+      return onSearch(e, inputRef.current);
+    }
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
     xmlns: "http://www.w3.org/2000/svg",
     width: "16",
@@ -362,11 +386,12 @@ var ChatSearch = function ChatSearch(_ref) {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
     d: "M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
+    ref: inputRef,
     placeholder: "Search or start new chat"
   }));
 };
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ChatSearch);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ChatSearchForm);
 
 /***/ }),
 
@@ -407,25 +432,24 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
-var Message = function Message(_ref) {
-  var text = _ref.text,
-      sentOn = _ref.sentOn,
-      isIncoming = _ref.isIncoming,
-      userPicUrl = _ref.userPicUrl;
+var Message = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().forwardRef(function (props, ref) {
+  var text = props.text,
+      sentOn = props.sentOn,
+      isIncoming = props.isIncoming,
+      userPicUrl = props.userPicUrl;
   var ioClass = isIncoming ? 'incoming' : 'outcoming';
   var image = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_common_UserPicture__WEBPACK_IMPORTED_MODULE_2__["default"], {
     url: userPicUrl
   });
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("section", {
-    className: "message ".concat(ioClass)
+    className: "message ".concat(ioClass),
+    ref: ref
   }, isIncoming ? image : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "message-text"
   }, text), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
     className: "sent-on"
   }, (0,_utils_dt__WEBPACK_IMPORTED_MODULE_1__.datetimeToMessageFormat)(sentOn)));
-};
-
+});
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Message);
 
 /***/ }),
@@ -453,12 +477,14 @@ var MessageList = function MessageList(_ref) {
   var messages = _ref.messages,
       currentUserId = _ref.currentUserId,
       _ref$userPicUrl = _ref.userPicUrl,
-      userPicUrl = _ref$userPicUrl === void 0 ? null : _ref$userPicUrl;
+      userPicUrl = _ref$userPicUrl === void 0 ? null : _ref$userPicUrl,
+      lastMessageRef = _ref.lastMessageRef;
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     id: "message-list"
   }, messages.map(function (msg, i) {
     var isIncoming = msg.toUser === currentUserId;
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_Message__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      ref: i === messages.lenth - 1 ? null : lastMessageRef,
       key: i,
       text: msg.text,
       sentOn: msg.sentOn,
@@ -502,7 +528,8 @@ var MessagePanel = function MessagePanel(_ref) {
       _ref$onNewMessage = _ref.onNewMessage,
       onNewMessage = _ref$onNewMessage === void 0 ? function (f) {
     return f;
-  } : _ref$onNewMessage;
+  } : _ref$onNewMessage,
+      lastMessageRef = _ref.lastMessageRef;
 
   if (!selectedUser) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("main", {
@@ -519,7 +546,8 @@ var MessagePanel = function MessagePanel(_ref) {
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_MessageList__WEBPACK_IMPORTED_MODULE_2__["default"], {
     messages: messages,
     currentUserId: currentUser.id,
-    userPicUrl: selectedUser.picture
+    userPicUrl: selectedUser.picture,
+    lastMessageRef: lastMessageRef
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_NewMessageForm__WEBPACK_IMPORTED_MODULE_3__["default"], {
     userId: selectedUser.id,
     onSend: onNewMessage
@@ -717,6 +745,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "getChats": () => (/* binding */ getChats),
 /* harmony export */   "getMessages": () => (/* binding */ getMessages),
+/* harmony export */   "getSearch": () => (/* binding */ getSearch),
 /* harmony export */   "postMessage": () => (/* binding */ postMessage)
 /* harmony export */ });
 /* harmony import */ var isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! isomorphic-fetch */ "./node_modules/isomorphic-fetch/fetch-npm-browserify.js");
@@ -730,15 +759,16 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 
-var getChats = /*#__PURE__*/function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-    var response;
+
+var request = /*#__PURE__*/function () {
+  var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(url, options) {
+    var response, data;
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
             _context.next = 2;
-            return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()('/chats');
+            return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(url, options);
 
           case 2:
             response = _context.sent;
@@ -746,9 +776,10 @@ var getChats = /*#__PURE__*/function () {
             return response.json();
 
           case 5:
-            return _context.abrupt("return", _context.sent);
+            data = _context.sent;
+            return _context.abrupt("return", data);
 
-          case 6:
+          case 7:
           case "end":
             return _context.stop();
         }
@@ -756,29 +787,26 @@ var getChats = /*#__PURE__*/function () {
     }, _callee);
   }));
 
-  return function getChats() {
+  return function request(_x, _x2) {
     return _ref.apply(this, arguments);
   };
 }();
-var getMessages = /*#__PURE__*/function () {
-  var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(userId) {
-    var response;
+
+var getChats = /*#__PURE__*/function () {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
+    var data;
     return _regeneratorRuntime().wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
             _context2.next = 2;
-            return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()("/messages/".concat(userId));
+            return request('/chats');
 
           case 2:
-            response = _context2.sent;
-            _context2.next = 5;
-            return response.json();
+            data = _context2.sent;
+            return _context2.abrupt("return", data);
 
-          case 5:
-            return _context2.abrupt("return", _context2.sent);
-
-          case 6:
+          case 4:
           case "end":
             return _context2.stop();
         }
@@ -786,37 +814,25 @@ var getMessages = /*#__PURE__*/function () {
     }, _callee2);
   }));
 
-  return function getMessages(_x) {
+  return function getChats() {
     return _ref2.apply(this, arguments);
   };
 }();
-var postMessage = /*#__PURE__*/function () {
-  var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(newMessage) {
-    var response;
+var getSearch = /*#__PURE__*/function () {
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(queryStr) {
+    var data;
     return _regeneratorRuntime().wrap(function _callee3$(_context3) {
       while (1) {
         switch (_context3.prev = _context3.next) {
           case 0:
             _context3.next = 2;
-            return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()('/messages', {
-              method: 'POST',
-              headers: {
-                'content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                newMessage: newMessage
-              })
-            });
+            return request("/search?q=".concat(queryStr));
 
           case 2:
-            response = _context3.sent;
-            _context3.next = 5;
-            return response.json();
+            data = _context3.sent;
+            return _context3.abrupt("return", data);
 
-          case 5:
-            return _context3.abrupt("return", _context3.sent);
-
-          case 6:
+          case 4:
           case "end":
             return _context3.stop();
         }
@@ -824,8 +840,65 @@ var postMessage = /*#__PURE__*/function () {
     }, _callee3);
   }));
 
-  return function postMessage(_x2) {
+  return function getSearch(_x3) {
     return _ref3.apply(this, arguments);
+  };
+}();
+var getMessages = /*#__PURE__*/function () {
+  var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(userId) {
+    var data;
+    return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+      while (1) {
+        switch (_context4.prev = _context4.next) {
+          case 0:
+            _context4.next = 2;
+            return request("/messages/".concat(userId));
+
+          case 2:
+            data = _context4.sent;
+            return _context4.abrupt("return", data);
+
+          case 4:
+          case "end":
+            return _context4.stop();
+        }
+      }
+    }, _callee4);
+  }));
+
+  return function getMessages(_x4) {
+    return _ref4.apply(this, arguments);
+  };
+}();
+var postMessage = /*#__PURE__*/function () {
+  var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(newMessage) {
+    var options, data;
+    return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+      while (1) {
+        switch (_context5.prev = _context5.next) {
+          case 0:
+            options = {
+              method: 'POST',
+              headers: {
+                'content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                newMessage: newMessage
+              })
+            };
+            data = request('/messages', options);
+            return _context5.abrupt("return", data);
+
+          case 3:
+          case "end":
+            return _context5.stop();
+        }
+      }
+    }, _callee5);
+  }));
+
+  return function postMessage(_x5) {
+    return _ref5.apply(this, arguments);
   };
 }();
 
@@ -939,10 +1012,10 @@ ___CSS_LOADER_EXPORT___.push([module.id, "#chat-panel {\r\n  flex-basis: calc(10
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/dist/cjs.js!./src/components/ChatPanel/ChatSearch.css":
-/*!***************************************************************************************!*\
-  !*** ./node_modules/css-loader/dist/cjs.js!./src/components/ChatPanel/ChatSearch.css ***!
-  \***************************************************************************************/
+/***/ "./node_modules/css-loader/dist/cjs.js!./src/components/ChatPanel/ChatSearchForm.css":
+/*!*******************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js!./src/components/ChatPanel/ChatSearchForm.css ***!
+  \*******************************************************************************************/
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -959,7 +1032,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "#chat-search {\r\n  padding: var(--pane-padding);\r\n  position: relative;\r\n}\r\n\r\n#chat-search svg {\r\n  position: absolute;\r\n  left: calc(var(--pane-padding) * 2);\r\n  top: calc(var(--pane-padding) * 2);\r\n  color: var(--muted-text-color);\r\n}\r\n\r\n#chat-search input {\r\n  box-sizing: border-box;\r\n  border: 1px solid var(--border-color);\r\n  border-radius: 2em;\r\n  padding: var(--pane-padding);\r\n  padding-left: calc(var(--pane-padding) * 2.5);\r\n  width: 100%;\r\n}\r\n\r\n#chat-search input::placeholder {\r\n  font-size: 0.9rem;\r\n  color: var(--muted-text-color);\r\n}", "",{"version":3,"sources":["webpack://./src/components/ChatPanel/ChatSearch.css"],"names":[],"mappings":"AAAA;EACE,4BAA4B;EAC5B,kBAAkB;AACpB;;AAEA;EACE,kBAAkB;EAClB,mCAAmC;EACnC,kCAAkC;EAClC,8BAA8B;AAChC;;AAEA;EACE,sBAAsB;EACtB,qCAAqC;EACrC,kBAAkB;EAClB,4BAA4B;EAC5B,6CAA6C;EAC7C,WAAW;AACb;;AAEA;EACE,iBAAiB;EACjB,8BAA8B;AAChC","sourcesContent":["#chat-search {\r\n  padding: var(--pane-padding);\r\n  position: relative;\r\n}\r\n\r\n#chat-search svg {\r\n  position: absolute;\r\n  left: calc(var(--pane-padding) * 2);\r\n  top: calc(var(--pane-padding) * 2);\r\n  color: var(--muted-text-color);\r\n}\r\n\r\n#chat-search input {\r\n  box-sizing: border-box;\r\n  border: 1px solid var(--border-color);\r\n  border-radius: 2em;\r\n  padding: var(--pane-padding);\r\n  padding-left: calc(var(--pane-padding) * 2.5);\r\n  width: 100%;\r\n}\r\n\r\n#chat-search input::placeholder {\r\n  font-size: 0.9rem;\r\n  color: var(--muted-text-color);\r\n}"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "#chat-search {\r\n  padding: var(--pane-padding);\r\n  position: relative;\r\n}\r\n\r\n#chat-search svg {\r\n  position: absolute;\r\n  left: calc(var(--pane-padding) * 2);\r\n  top: calc(var(--pane-padding) * 2);\r\n  color: var(--muted-text-color);\r\n}\r\n\r\n#chat-search input {\r\n  box-sizing: border-box;\r\n  border: 1px solid var(--border-color);\r\n  border-radius: 2em;\r\n  padding: var(--pane-padding);\r\n  padding-left: calc(var(--pane-padding) * 2.5);\r\n  width: 100%;\r\n}\r\n\r\n#chat-search input::placeholder {\r\n  font-size: 0.9rem;\r\n  color: var(--muted-text-color);\r\n}", "",{"version":3,"sources":["webpack://./src/components/ChatPanel/ChatSearchForm.css"],"names":[],"mappings":"AAAA;EACE,4BAA4B;EAC5B,kBAAkB;AACpB;;AAEA;EACE,kBAAkB;EAClB,mCAAmC;EACnC,kCAAkC;EAClC,8BAA8B;AAChC;;AAEA;EACE,sBAAsB;EACtB,qCAAqC;EACrC,kBAAkB;EAClB,4BAA4B;EAC5B,6CAA6C;EAC7C,WAAW;AACb;;AAEA;EACE,iBAAiB;EACjB,8BAA8B;AAChC","sourcesContent":["#chat-search {\r\n  padding: var(--pane-padding);\r\n  position: relative;\r\n}\r\n\r\n#chat-search svg {\r\n  position: absolute;\r\n  left: calc(var(--pane-padding) * 2);\r\n  top: calc(var(--pane-padding) * 2);\r\n  color: var(--muted-text-color);\r\n}\r\n\r\n#chat-search input {\r\n  box-sizing: border-box;\r\n  border: 1px solid var(--border-color);\r\n  border-radius: 2em;\r\n  padding: var(--pane-padding);\r\n  padding-left: calc(var(--pane-padding) * 2.5);\r\n  width: 100%;\r\n}\r\n\r\n#chat-search input::placeholder {\r\n  font-size: 0.9rem;\r\n  color: var(--muted-text-color);\r\n}"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -34914,10 +34987,10 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 
 /***/ }),
 
-/***/ "./src/components/ChatPanel/ChatSearch.css":
-/*!*************************************************!*\
-  !*** ./src/components/ChatPanel/ChatSearch.css ***!
-  \*************************************************/
+/***/ "./src/components/ChatPanel/ChatSearchForm.css":
+/*!*****************************************************!*\
+  !*** ./src/components/ChatPanel/ChatSearchForm.css ***!
+  \*****************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -34937,7 +35010,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! !../../../node_modules/style-loader/dist/runtime/styleTagTransform.js */ "./node_modules/style-loader/dist/runtime/styleTagTransform.js");
 /* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _node_modules_css_loader_dist_cjs_js_ChatSearch_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! !!../../../node_modules/css-loader/dist/cjs.js!./ChatSearch.css */ "./node_modules/css-loader/dist/cjs.js!./src/components/ChatPanel/ChatSearch.css");
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_ChatSearchForm_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! !!../../../node_modules/css-loader/dist/cjs.js!./ChatSearchForm.css */ "./node_modules/css-loader/dist/cjs.js!./src/components/ChatPanel/ChatSearchForm.css");
 
       
       
@@ -34959,12 +35032,12 @@ options.setAttributes = (_node_modules_style_loader_dist_runtime_setAttributesWi
 options.domAPI = (_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default());
 options.insertStyleElement = (_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default());
 
-var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_ChatSearch_css__WEBPACK_IMPORTED_MODULE_6__["default"], options);
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_ChatSearchForm_css__WEBPACK_IMPORTED_MODULE_6__["default"], options);
 
 
 
 
-       /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_ChatSearch_css__WEBPACK_IMPORTED_MODULE_6__["default"] && _node_modules_css_loader_dist_cjs_js_ChatSearch_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals ? _node_modules_css_loader_dist_cjs_js_ChatSearch_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals : undefined);
+       /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_ChatSearchForm_css__WEBPACK_IMPORTED_MODULE_6__["default"] && _node_modules_css_loader_dist_cjs_js_ChatSearchForm_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals ? _node_modules_css_loader_dist_cjs_js_ChatSearchForm_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals : undefined);
 
 
 /***/ }),
@@ -36386,8 +36459,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_dom_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom/client */ "./node_modules/react-dom/client.js");
-/* harmony import */ var _components_App__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/App */ "./src/components/App.js");
-/* harmony import */ var _index_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./index.css */ "./src/index.css");
+/* harmony import */ var _utils_request__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils/request */ "./src/utils/request.js");
+/* harmony import */ var _components_App__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/App */ "./src/components/App.js");
+/* harmony import */ var _index_css__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./index.css */ "./src/index.css");
+
 
 
 
@@ -36395,7 +36470,14 @@ __webpack_require__.r(__webpack_exports__);
 window.React = (react__WEBPACK_IMPORTED_MODULE_0___default());
 var container = document.getElementById('app');
 var root = (0,react_dom_client__WEBPACK_IMPORTED_MODULE_1__.createRoot)(container);
-root.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_App__WEBPACK_IMPORTED_MODULE_2__["default"], null));
+(0,_utils_request__WEBPACK_IMPORTED_MODULE_2__.getChats)().then(function (data) {
+  var currentUser = data.currentUser,
+      chats = data.chats;
+  root.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_App__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    currentUser: currentUser,
+    chats: chats
+  }));
+});
 })();
 
 /******/ })()

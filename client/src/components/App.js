@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { getChats, getMessages, postMessage } from '../utils/request';
+import React, { Component, createRef } from 'react';
+import { getSearch, getMessages, postMessage } from '../utils/request';
 import ChatPanel from './ChatPanel';
 import MessagePanel from './MessagePanel';
 import './App.css';
@@ -8,29 +8,52 @@ class App extends Component {
   constructor(props) {
     super(props);
 
+    // static parameters, so initialized from props
+    const { currentUser, chats } = this.props;
+
     this.state = {
-      loading: true, // cache ?
-      currentUser: null, // cache to session
-      chats: [], // cache to session
-      selectedUser: null, // cache to session
-      messages: [], // cache to session
+      searching: false,
+      currentUser,
+      chats,
+      selectedUser: null,
+      messages: [],
     };
 
     this.onChatSearch = this.onChatSearch.bind(this);
     this.onChatSelect = this.onChatSelect.bind(this);
     this.onNewMessage = this.onNewMessage.bind(this);
+
+    this.lastMessageRef = createRef();
   }
 
   componentDidMount() {
-    getChats().then(data => {
-      const { currentUser, chats } = data;
-      this.setState({ loading: false, currentUser, chats });
-    });
+    const { messages } = this.state;
+    const { current: lastMessage } = this.lastMessageRef;
+    if (messages.length > 0) {
+      lastMessage.scrollIntoView();
+    }
   }
 
-  onChatSearch(e) {
+  componentDidUpdate(prevProps, prevState) {
+    const { messages } = this.state;
+    const { current: lastMessage } = this.lastMessageRef;
+    if(messages !== prevState.messages) {
+      lastMessage.scrollIntoView();
+    }
+  }
+
+  onChatSearch(e, inputElem) {
     e.preventDefault();
-    alert('Search started');
+    if (!inputElem.value) {
+      // this.setState({ searching: false })
+      return;
+    }
+
+    const queryStr = inputElem.value;
+    getSearch(queryStr)
+      .then(data => {
+        console.log('Search:', data);
+      })
   }
 
   onChatSelect(userId) {
@@ -38,6 +61,7 @@ class App extends Component {
       const { user, messages } = data;
       this.setState({ selectedUser: user, messages });
     });
+    this.lastMessageRef = createRef();
   }
 
   onNewMessage(e, inputElem, toUser) {
@@ -54,6 +78,7 @@ class App extends Component {
     };
 
     inputElem.value = '';
+    this.setState({ messages: [...messages, newMessage] });
 
     postMessage(newMessage).then(body => {
       const { reply } = body;
@@ -67,7 +92,7 @@ class App extends Component {
     }
 
     const { currentUser, selectedUser, chats, messages } = this.state;
-    const { onNewMessage, onChatSelect, onChatSearch } = this;
+    const { onNewMessage, onChatSelect, onChatSearch, lastMessageRef } = this;
 
     return (
       <>
@@ -82,6 +107,7 @@ class App extends Component {
           selectedUser={selectedUser}
           messages={messages}
           onNewMessage={onNewMessage}
+          lastMessageRef={lastMessageRef}
         />
       </>
     );

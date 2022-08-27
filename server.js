@@ -1,18 +1,23 @@
 const express = require('express');
 const path = require('path');
 const fetch = require('isomorphic-fetch');
-
 const { readData, writeData } = require('./data/manip');
 
 const app = express();
 const port = 3000;
 
-app.use(express.json());
-
 // no login api, so this is a constant value
 const currentUserId = 'literally-me';
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'client', 'public')));
+
+app.get('/search', (req, res) => {
+  const { q } = req.query;
+  console.log(req.query);
+  res.send({ q: q })
+})
 
 app.get('/messages/:userId', (req, res) => {
   const { userId } = req.params;

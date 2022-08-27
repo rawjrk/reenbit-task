@@ -4,7 +4,9 @@ import MessageList from './MessageList';
 import NewMessageForm from './NewMessageForm';
 import './MessagePanel.css';
 
-const MessagePanel = ({ currentUser, selectedUser, messages, onNewMessage = f => f }) => {
+const MessagePanel = ({
+  currentUser, selectedUser, messages, onNewMessage = f => f, lastMessageRef,
+}) => {
   if (!selectedUser) {
     return (
       <main id="message-panel">
@@ -16,7 +18,12 @@ const MessagePanel = ({ currentUser, selectedUser, messages, onNewMessage = f =>
   return (
     <main id="message-panel">
       <ProfileInfo user={selectedUser} />
-      <MessageList messages={messages} currentUserId={currentUser.id} userPicUrl={selectedUser.picture} />
+      <MessageList
+        messages={messages}
+        currentUserId={currentUser.id}
+        userPicUrl={selectedUser.picture}
+        lastMessageRef={lastMessageRef}
+      />
       <NewMessageForm userId={selectedUser.id} onSend={onNewMessage} />
     </main>
   );

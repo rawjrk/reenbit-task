@@ -1,6 +1,6 @@
 import React from 'react';
 import ProfileInfo from '../common/ProfileInfo';
-import ChatSearch from './ChatSearch';
+import ChatSearch from './ChatSearchForm';
 import ChatList from './ChatList';
 import './ChatPanel.css';
 
@@ -10,7 +10,7 @@ const ChatPanel = ({
   <main id="chat-panel">
     <header id="user-panel">
       <ProfileInfo user={currentUser} />
-      <ChatSearch onSubmit={onSearch} />
+      <ChatSearch onSearch={onSearch} />
     </header>
     <h2 id="chats-header">Chats</h2>
     <ChatList chats={chats} onSelect={onSelect} />

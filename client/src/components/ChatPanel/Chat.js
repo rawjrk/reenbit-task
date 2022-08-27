@@ -2,7 +2,7 @@ import React from 'react';
 import { datetimeToChatFormat } from '../../utils/dt';
 import './Chat.css';
 
-const Chat = ({ user, message, onClick }) => (
+const Chat = ({ user, message, onClick = f => f }) => (
   <div className="chat" onClick={onClick} role="button">
     <img src={user.picture} className="profile-picture" alt="profile" />
     <div>
@@ -12,9 +12,5 @@ const Chat = ({ user, message, onClick }) => (
     <p className="sent-on">{datetimeToChatFormat(message.sentOn)}</p>
   </div>
 );
-
-Chat.defaultProps = {
-  onClick: f => f,
-};
 
 export default Chat;
