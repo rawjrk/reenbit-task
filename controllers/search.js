@@ -4,17 +4,22 @@ const { readData } = require('../data/manip');
 const currentUserId = 'literally-me';
 
 module.exports.getSearch = (req, res) => {
-  const { q: searchText } = req.query;
+  const { q } = req.query;
+  const searchText = q.toLowerCase();
 
   const users = readData('users');
-  const matchedUsers = users.filter(user => user.name.includes(searchText));
+  const matchedUsers = users.filter(user => {
+    const userName = user.name.toLowerCase();
+    return userName.includes(searchText);
+  });
 
   const messages = readData('messages');
   const searchMatch = messages
-      .filter(msg =>
-        msg.text.includes(searchText) ||
-        matchedUsers.map(user => user.id).includes(msg.fromUser),
-      )
+      .filter(msg => {
+        const msgText = msg.text.toLowerCase();
+        return (msgText.includes(searchText) ||
+          matchedUsers.map(user => user.id).includes(msg.fromUser));
+      })
       .map(msg => {
         const userId = (msg.fromUser === currentUserId) ?
             msg.toUser :
