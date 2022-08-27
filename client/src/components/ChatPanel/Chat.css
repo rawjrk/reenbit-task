@@ -16,6 +16,10 @@
 }
 .chat .message-text {
   color: var(--muted-text-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: calc(100vw / 3);
 }
 
 .chat .sent-on {
