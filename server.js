@@ -3,7 +3,8 @@ const path = require('path');
 const app = express();
 const port = 3000;
 
-const { getChats, getSearch } = require('./controllers');
+const { getChats } = require('./controllers/chats');
+const { getSearch } = require('./controllers/search');
 const { getMessages, postMessages } = require('./controllers/messages');
 
 app.use(express.json());
