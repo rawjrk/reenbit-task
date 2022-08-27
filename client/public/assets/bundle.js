@@ -109,6 +109,7 @@ var App = /*#__PURE__*/function (_Component) {
 
       if (messages !== prevState.messages) {
         lastMessage.scrollIntoView();
+        (0,_utils_session__WEBPACK_IMPORTED_MODULE_2__.sessionSave)(messages);
       }
     }
   }, {
@@ -151,7 +152,6 @@ var App = /*#__PURE__*/function (_Component) {
         });
 
         (0,_utils_session__WEBPACK_IMPORTED_MODULE_2__.sessionSave)('selectedUser', user);
-        (0,_utils_session__WEBPACK_IMPORTED_MODULE_2__.sessionSave)('messages', messages);
       });
       this.lastMessageRef = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.createRef)();
     }
@@ -177,9 +177,10 @@ var App = /*#__PURE__*/function (_Component) {
       });
       (0,_utils_request__WEBPACK_IMPORTED_MODULE_1__.postMessage)(newMessage).then(function (body) {
         var reply = body.reply;
+        var messages = _this4.state.messages;
 
         _this4.setState({
-          messages: [].concat(_toConsumableArray(messages), [newMessage, reply])
+          messages: [].concat(_toConsumableArray(messages), [reply])
         });
       });
     }

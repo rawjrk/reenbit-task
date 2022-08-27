@@ -42,6 +42,7 @@ class App extends Component {
     const { current: lastMessage } = this.lastMessageRef;
     if (messages !== prevState.messages) {
       lastMessage.scrollIntoView();
+      sessionSave(messages);
     }
   }
 
@@ -65,7 +66,6 @@ class App extends Component {
       const { user, messages } = data;
       this.setState({ selectedUser: user, messages });
       sessionSave('selectedUser', user);
-      sessionSave('messages', messages);
     });
     this.lastMessageRef = createRef();
   }
@@ -88,7 +88,8 @@ class App extends Component {
 
     postMessage(newMessage).then(body => {
       const { reply } = body;
-      this.setState({ messages: [...messages, newMessage, reply] });
+      const { messages } = this.state;
+      this.setState({ messages: [...messages, reply] });
     });
   }
 
