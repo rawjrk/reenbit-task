@@ -393,7 +393,7 @@ var ChatSearchForm = function ChatSearchForm(_ref) {
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("form", {
     id: "chat-search",
     onSubmit: function onSubmit(e) {
-      return onSearch(e, inputRef.current);
+      return e.preventDefault();
     }
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", {
     xmlns: "http://www.w3.org/2000/svg",
@@ -405,6 +405,9 @@ var ChatSearchForm = function ChatSearchForm(_ref) {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {
     d: "M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
+    onInput: function onInput(e) {
+      return onSearch(e, inputRef.current);
+    },
     ref: inputRef,
     placeholder: "Search or start new chat"
   }));
@@ -988,7 +991,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".chat {\r\n  padding: var(--pane-padding);\r\n  display: flex;\r\n  position: relative;\r\n}\r\n\r\n.chat div {\r\n  padding-left: var(--pane-padding);\r\n}\r\n.chat p {\r\n  margin: 0;\r\n}\r\n\r\n.chat .profile-name {\r\n  font-weight: 500;\r\n}\r\n.chat .message-text {\r\n  color: var(--muted-text-color);\r\n  white-space: nowrap;\r\n  overflow: hidden;\r\n  text-overflow: ellipsis;\r\n  width: calc(100vw / 3);\r\n}\r\n\r\n.chat .sent-on {\r\n  position: absolute;\r\n  right: var(--pane-padding);\r\n  font-size: 0.9em;\r\n}", "",{"version":3,"sources":["webpack://./src/components/ChatPanel/Chat.css"],"names":[],"mappings":"AAAA;EACE,4BAA4B;EAC5B,aAAa;EACb,kBAAkB;AACpB;;AAEA;EACE,iCAAiC;AACnC;AACA;EACE,SAAS;AACX;;AAEA;EACE,gBAAgB;AAClB;AACA;EACE,8BAA8B;EAC9B,mBAAmB;EACnB,gBAAgB;EAChB,uBAAuB;EACvB,sBAAsB;AACxB;;AAEA;EACE,kBAAkB;EAClB,0BAA0B;EAC1B,gBAAgB;AAClB","sourcesContent":[".chat {\r\n  padding: var(--pane-padding);\r\n  display: flex;\r\n  position: relative;\r\n}\r\n\r\n.chat div {\r\n  padding-left: var(--pane-padding);\r\n}\r\n.chat p {\r\n  margin: 0;\r\n}\r\n\r\n.chat .profile-name {\r\n  font-weight: 500;\r\n}\r\n.chat .message-text {\r\n  color: var(--muted-text-color);\r\n  white-space: nowrap;\r\n  overflow: hidden;\r\n  text-overflow: ellipsis;\r\n  width: calc(100vw / 3);\r\n}\r\n\r\n.chat .sent-on {\r\n  position: absolute;\r\n  right: var(--pane-padding);\r\n  font-size: 0.9em;\r\n}"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, ".chat {\r\n  padding: var(--pane-padding);\r\n  display: flex;\r\n  position: relative;\r\n}\r\n\r\n.chat div {\r\n  padding-left: var(--pane-padding);\r\n}\r\n.chat p {\r\n  margin: 0;\r\n}\r\n\r\n.chat .profile-name {\r\n  font-weight: 500;\r\n}\r\n.chat .message-text {\r\n  color: var(--muted-text-color);\r\n  width: calc(100vw / 3 - var(--pane-padding) * 3 - var(--thumbnail-size));\r\n  white-space: nowrap;\r\n  overflow: hidden;\r\n  text-overflow: ellipsis;\r\n}\r\n\r\n.chat .sent-on {\r\n  position: absolute;\r\n  right: var(--pane-padding);\r\n  font-size: 0.9em;\r\n}", "",{"version":3,"sources":["webpack://./src/components/ChatPanel/Chat.css"],"names":[],"mappings":"AAAA;EACE,4BAA4B;EAC5B,aAAa;EACb,kBAAkB;AACpB;;AAEA;EACE,iCAAiC;AACnC;AACA;EACE,SAAS;AACX;;AAEA;EACE,gBAAgB;AAClB;AACA;EACE,8BAA8B;EAC9B,wEAAwE;EACxE,mBAAmB;EACnB,gBAAgB;EAChB,uBAAuB;AACzB;;AAEA;EACE,kBAAkB;EAClB,0BAA0B;EAC1B,gBAAgB;AAClB","sourcesContent":[".chat {\r\n  padding: var(--pane-padding);\r\n  display: flex;\r\n  position: relative;\r\n}\r\n\r\n.chat div {\r\n  padding-left: var(--pane-padding);\r\n}\r\n.chat p {\r\n  margin: 0;\r\n}\r\n\r\n.chat .profile-name {\r\n  font-weight: 500;\r\n}\r\n.chat .message-text {\r\n  color: var(--muted-text-color);\r\n  width: calc(100vw / 3 - var(--pane-padding) * 3 - var(--thumbnail-size));\r\n  white-space: nowrap;\r\n  overflow: hidden;\r\n  text-overflow: ellipsis;\r\n}\r\n\r\n.chat .sent-on {\r\n  position: absolute;\r\n  right: var(--pane-padding);\r\n  font-size: 0.9em;\r\n}"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -1042,7 +1045,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "#chat-panel {\r\n  flex-basis: calc(100vw / 3 * 1);\r\n  border-right: 1px solid var(--border-color);\r\n}\r\n\r\n#user-panel {\r\n  background-color: var(--light-bg-color);\r\n  border-bottom: 1px solid var(--border-color);\r\n}\r\n\r\n#chat-list-header {\r\n  font-weight: 400;\r\n  color: var(--header-color);\r\n  padding-left: var(--pane-padding);\r\n}", "",{"version":3,"sources":["webpack://./src/components/ChatPanel/ChatPanel.css"],"names":[],"mappings":"AAAA;EACE,+BAA+B;EAC/B,2CAA2C;AAC7C;;AAEA;EACE,uCAAuC;EACvC,4CAA4C;AAC9C;;AAEA;EACE,gBAAgB;EAChB,0BAA0B;EAC1B,iCAAiC;AACnC","sourcesContent":["#chat-panel {\r\n  flex-basis: calc(100vw / 3 * 1);\r\n  border-right: 1px solid var(--border-color);\r\n}\r\n\r\n#user-panel {\r\n  background-color: var(--light-bg-color);\r\n  border-bottom: 1px solid var(--border-color);\r\n}\r\n\r\n#chat-list-header {\r\n  font-weight: 400;\r\n  color: var(--header-color);\r\n  padding-left: var(--pane-padding);\r\n}"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "#chat-panel {\r\n  width: calc(100vw / 3);\r\n  border-right: 1px solid var(--border-color);\r\n}\r\n\r\n#user-panel {\r\n  background-color: var(--light-bg-color);\r\n  border-bottom: 1px solid var(--border-color);\r\n}\r\n\r\n#chat-list-header {\r\n  font-weight: 400;\r\n  color: var(--header-color);\r\n  padding-left: var(--pane-padding);\r\n}", "",{"version":3,"sources":["webpack://./src/components/ChatPanel/ChatPanel.css"],"names":[],"mappings":"AAAA;EACE,sBAAsB;EACtB,2CAA2C;AAC7C;;AAEA;EACE,uCAAuC;EACvC,4CAA4C;AAC9C;;AAEA;EACE,gBAAgB;EAChB,0BAA0B;EAC1B,iCAAiC;AACnC","sourcesContent":["#chat-panel {\r\n  width: calc(100vw / 3);\r\n  border-right: 1px solid var(--border-color);\r\n}\r\n\r\n#user-panel {\r\n  background-color: var(--light-bg-color);\r\n  border-bottom: 1px solid var(--border-color);\r\n}\r\n\r\n#chat-list-header {\r\n  font-weight: 400;\r\n  color: var(--header-color);\r\n  padding-left: var(--pane-padding);\r\n}"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

@@ -1,5 +1,5 @@
 #chat-panel {
-  flex-basis: calc(100vw / 3 * 1);
+  width: calc(100vw / 3);
   border-right: 1px solid var(--border-color);
 }
 
