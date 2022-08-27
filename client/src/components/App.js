@@ -40,7 +40,7 @@ class App extends Component {
   componentDidUpdate(prevProps, prevState) {
     const { messages } = this.state;
     const { current: lastMessage } = this.lastMessageRef;
-    if(messages !== prevState.messages) {
+    if (messages !== prevState.messages) {
       lastMessage.scrollIntoView();
     }
   }

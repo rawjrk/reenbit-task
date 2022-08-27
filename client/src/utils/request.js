@@ -4,10 +4,10 @@ const request = async (url, options) => {
   const response = await fetch(url, options);
   const data = await response.json();
   return data;
-}
+};
 
 export const getChats = async () => {
-  const data = await request('/chats')
+  const data = await request('/chats');
   return data;
 };
 

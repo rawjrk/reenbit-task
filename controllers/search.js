@@ -13,13 +13,13 @@ module.exports.getSearch = (req, res) => {
   const searchMatch = messages
       .filter(msg =>
         msg.text.includes(searchText) ||
-        matchedUsers.map(user => user.id).includes(msg.fromUser)
+        matchedUsers.map(user => user.id).includes(msg.fromUser),
       )
       .map(msg => {
         const userId = (msg.fromUser === currentUserId) ?
             msg.toUser :
             msg.fromUser;
-        
+
         const user = users.find(u => u.id === userId);
         return { user, message: msg };
       });

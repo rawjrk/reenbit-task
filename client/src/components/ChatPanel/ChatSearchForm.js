@@ -10,7 +10,7 @@ const ChatSearchForm = ({ onSearch = f => f }) => {
       </svg>
       <input onInput={e => onSearch(e, inputRef.current)} ref={inputRef} placeholder="Search or start new chat" />
     </form>
-  )
+  );
 };
 
 export default ChatSearchForm;

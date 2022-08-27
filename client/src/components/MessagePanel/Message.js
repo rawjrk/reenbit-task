@@ -5,7 +5,7 @@ import './Message.css';
 
 const Message = React.forwardRef((props, ref) => {
   const { text, sentOn, isIncoming, userPicUrl } = props;
-  
+
   const ioClass = isIncoming ? 'incoming' : 'outcoming';
   const image = <UserPicture url={userPicUrl} />;
 
