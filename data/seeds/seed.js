@@ -2,7 +2,7 @@ const { writeData } = require('../manip');
 
 const currentUser = {
   'id': 'literally-me',
-  'name': null,
+  'name': '',
   'picture': 'assets/images/no-profile-picture.jpg',
 };
 
