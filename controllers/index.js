@@ -37,7 +37,7 @@ module.exports.getSearch = (req, res) => {
             msg.toUser :
             msg.fromUser;
         
-        const user = users.find(u => u.id = userId);
+        const user = users.find(u => u.id === userId);
         return { user, message: msg };
       });
 
