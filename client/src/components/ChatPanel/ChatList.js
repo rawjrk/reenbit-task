@@ -8,7 +8,7 @@ const ChatList = ({ chats, onSelect = f => f }) => (
       <Chat
         key={i}
         user={chat.user}
-        message={chat.recentMessage}
+        message={chat.message}
         onClick={() => onSelect(chat.user.id)}
       />
     ))}

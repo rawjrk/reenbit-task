@@ -15,7 +15,7 @@ module.exports.getChats = (req, res) => {
       (msg.fromUser === user.id || msg.toUser === user.id));
     const recentMessage = userMessages[userMessages.length - 1];
 
-    return { user, recentMessage };
+    return { user, message: recentMessage };
   });
   res.send({ currentUser, chats });
 };
@@ -27,10 +27,19 @@ module.exports.getSearch = (req, res) => {
   const matchedUsers = users.filter(user => user.name.includes(searchText));
 
   const messages = readData('messages');
-  const searchMatch = messages.filter(msg =>
-    msg.text.includes(searchText) ||
-    matchedUsers.map(user => user.id).includes(msg.fromUser)
-  );
+  const searchMatch = messages
+      .filter(msg =>
+        msg.text.includes(searchText) ||
+        matchedUsers.map(user => user.id).includes(msg.fromUser)
+      )
+      .map(msg => {
+        const userId = (msg.fromUser === currentUserId) ?
+            msg.toUser :
+            msg.fromUser;
+        
+        const user = users.find(u => u.id = userId);
+        return { user, message: msg };
+      });
 
   res.send({ q: searchText, searchMatch: searchMatch });
 };

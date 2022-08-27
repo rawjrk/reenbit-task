@@ -12,11 +12,12 @@ class App extends Component {
     const { currentUser, chats } = this.props;
 
     this.state = {
-      searching: false,
       currentUser,
       chats,
       selectedUser: null,
       messages: [],
+      searching: false,
+      searchMatch: [],
     };
 
     this.onChatSearch = this.onChatSearch.bind(this);
@@ -45,15 +46,16 @@ class App extends Component {
   onChatSearch(e, inputElem) {
     e.preventDefault();
     if (!inputElem.value) {
-      // this.setState({ searching: false })
+      this.setState({ searching: false, searchMatch: [] });
       return;
     }
 
     const queryStr = inputElem.value;
     getSearch(queryStr)
       .then(data => {
-        console.log('Search:', data);
-      })
+        const { searchMatch } = data;
+        this.setState({ searching: true, searchMatch });
+      });
   }
 
   onChatSelect(userId) {
@@ -91,14 +93,14 @@ class App extends Component {
       return <div>Loading...</div>;
     }
 
-    const { currentUser, selectedUser, chats, messages } = this.state;
+    const { currentUser, selectedUser, chats, messages, searching, searchMatch } = this.state;
     const { onNewMessage, onChatSelect, onChatSearch, lastMessageRef } = this;
 
     return (
       <>
         <ChatPanel
           currentUser={currentUser}
-          chats={chats}
+          chats={searching ? searchMatch : chats}
           onSelect={onChatSelect}
           onSearch={onChatSearch}
         />

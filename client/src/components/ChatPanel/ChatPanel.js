@@ -12,7 +12,7 @@ const ChatPanel = ({
       <ProfileInfo user={currentUser} />
       <ChatSearch onSearch={onSearch} />
     </header>
-    <h2 id="chats-header">Chats</h2>
+    <h2 id="chat-list-header">Chats</h2>
     <ChatList chats={chats} onSelect={onSelect} />
   </main>
 );
