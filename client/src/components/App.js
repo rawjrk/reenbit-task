@@ -27,6 +27,7 @@ class App extends Component {
     this.onChatSearch = this.onChatSearch.bind(this);
     this.onChatSelect = this.onChatSelect.bind(this);
     this.onNewMessage = this.onNewMessage.bind(this);
+    this.onIncomingMessage = this.onIncomingMessage.bind(this);
 
     this.lastMessageRef = createRef();
   }
@@ -81,6 +82,25 @@ class App extends Component {
     this.lastMessageRef = createRef();
   }
 
+  onIncomingMessage(replyMessage, replyUser) {
+    const { messages, chats, selectedUser } = this.state;
+
+    const updatedChats = [
+      { user: replyUser, message: replyMessage },
+      ...chats.filter(chat => chat.user.id !== replyUser.id),
+    ];
+    this.setState({ chats: updatedChats });
+
+    if (selectedUser.id === replyUser.id) {
+      this.setState({ messages: [...messages, replyMessage] });
+    }
+
+    const popup = notifyMessage(replyMessage, replyUser);
+    popup.onclick = () => {
+      this.onChatSelect(replyUser.id)
+    };
+  }
+
   onNewMessage(e, inputElem, toUser) {
     e.preventDefault();
     if (!inputElem.value) return;
@@ -107,19 +127,7 @@ class App extends Component {
 
     postMessage(newMessage).then(body => {
       const { message: replyMessage, user: replyUser } = body;
-      const { messages, chats, selectedUser } = this.state;
-
-      const updatedChats = [
-        { user: replyUser, message: replyMessage },
-        ...chats.filter(chat => chat.user.id !== replyUser.id),
-      ];
-      this.setState({ chats: updatedChats });
-
-      if (selectedUser.id === replyUser.id) {
-        this.setState({ messages: [...messages, replyMessage] });
-      }
-
-      notifyMessage(replyMessage, replyUser);
+      this.onIncomingMessage(replyMessage, replyUser);
     });
   }
 

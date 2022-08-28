@@ -88,6 +88,7 @@ var App = /*#__PURE__*/function (_Component) {
     _this.onChatSearch = _this.onChatSearch.bind(_assertThisInitialized(_this));
     _this.onChatSelect = _this.onChatSelect.bind(_assertThisInitialized(_this));
     _this.onNewMessage = _this.onNewMessage.bind(_assertThisInitialized(_this));
+    _this.onIncomingMessage = _this.onIncomingMessage.bind(_assertThisInitialized(_this));
     _this.lastMessageRef = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.createRef)();
     return _this;
   }
@@ -178,17 +179,48 @@ var App = /*#__PURE__*/function (_Component) {
       this.lastMessageRef = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.createRef)();
     }
   }, {
-    key: "onNewMessage",
-    value: function onNewMessage(e, inputElem, toUser) {
+    key: "onIncomingMessage",
+    value: function onIncomingMessage(replyMessage, replyUser) {
       var _this5 = this;
 
-      e.preventDefault();
-      if (!inputElem.value) return;
       var _this$state3 = this.state,
-          currentUser = _this$state3.currentUser,
           messages = _this$state3.messages,
           chats = _this$state3.chats,
           selectedUser = _this$state3.selectedUser;
+      var updatedChats = [{
+        user: replyUser,
+        message: replyMessage
+      }].concat(_toConsumableArray(chats.filter(function (chat) {
+        return chat.user.id !== replyUser.id;
+      })));
+      this.setState({
+        chats: updatedChats
+      });
+
+      if (selectedUser.id === replyUser.id) {
+        this.setState({
+          messages: [].concat(_toConsumableArray(messages), [replyMessage])
+        });
+      }
+
+      var popup = (0,_utils_notify__WEBPACK_IMPORTED_MODULE_3__.notifyMessage)(replyMessage, replyUser);
+
+      popup.onclick = function () {
+        _this5.onChatSelect(replyUser.id);
+      };
+    }
+  }, {
+    key: "onNewMessage",
+    value: function onNewMessage(e, inputElem, toUser) {
+      var _this6 = this;
+
+      e.preventDefault();
+      if (!inputElem.value) return;
+      var _this$state4 = this.state,
+          currentUser = _this$state4.currentUser,
+          messages = _this$state4.messages,
+          chats = _this$state4.chats,
+          selectedUser = _this$state4.selectedUser;
       var newMessage = {
         fromUser: currentUser.id,
         toUser: toUser,
@@ -209,28 +241,8 @@ var App = /*#__PURE__*/function (_Component) {
       (0,_utils_request__WEBPACK_IMPORTED_MODULE_1__.postMessage)(newMessage).then(function (body) {
         var replyMessage = body.message,
             replyUser = body.user;
-        var _this5$state = _this5.state,
-            messages = _this5$state.messages,
-            chats = _this5$state.chats,
-            selectedUser = _this5$state.selectedUser;
-        var updatedChats = [{
-          user: replyUser,
-          message: replyMessage
-        }].concat(_toConsumableArray(chats.filter(function (chat) {
-          return chat.user.id !== replyUser.id;
-        })));
 
-        _this5.setState({
-          chats: updatedChats
-        });
-
-        if (selectedUser.id === replyUser.id) {
-          _this5.setState({
-            messages: [].concat(_toConsumableArray(messages), [replyMessage])
-          });
-        }
-
-        (0,_utils_notify__WEBPACK_IMPORTED_MODULE_3__.notifyMessage)(replyMessage, replyUser);
+        _this6.onIncomingMessage(replyMessage, replyUser);
       });
     }
   }, {
@@ -240,13 +252,13 @@ var App = /*#__PURE__*/function (_Component) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "Loading...");
       }
 
-      var _this$state4 = this.state,
-          currentUser = _this$state4.currentUser,
-          selectedUser = _this$state4.selectedUser,
-          chats = _this$state4.chats,
-          messages = _this$state4.messages,
-          searching = _this$state4.searching,
-          searchMatch = _this$state4.searchMatch;
+      var _this$state5 = this.state,
+          currentUser = _this$state5.currentUser,
+          selectedUser = _this$state5.selectedUser,
+          chats = _this$state5.chats,
+          messages = _this$state5.messages,
+          searching = _this$state5.searching,
+          searchMatch = _this$state5.searchMatch;
       var onNewMessage = this.onNewMessage,
           onChatSelect = this.onChatSelect,
           onChatSearch = this.onChatSearch,
@@ -826,6 +838,7 @@ var notify = function notify(header, body, icon) {
   setTimeout(function () {
     return popup.close();
   }, 10 * 1000);
+  return popup;
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (notify);
@@ -833,7 +846,8 @@ var notifyMessage = function notifyMessage(message, user) {
   var name = user.name,
       picture = user.picture;
   var text = message.text;
-  notify(name, text, picture);
+  var popup = notify(name, text, picture);
+  return popup;
 };
 
 /***/ }),
