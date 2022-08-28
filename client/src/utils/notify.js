@@ -7,7 +7,7 @@ const notify = (header, body, icon) => {
 export default notify;
 
 export const notifyMessage = (message, user) => {
-  const { name, picture } = user; 
+  const { name, picture } = user;
   const { text } = message;
   const popup = notify(name, text, picture);
   return popup;

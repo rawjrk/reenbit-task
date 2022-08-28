@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
+import PropTypes from 'prop-types';
+import { userSchema, messageSchema } from '../../utils/schemas';
 import ProfileInfo from '../common/ProfileInfo';
 import MessageList from './MessageList';
 import NewMessageForm from './NewMessageForm';
 import './MessagePanel.css';
 
-const MessagePanel = ({
-  currentUser, selectedUser, messages, onNewMessage = f => f, lastMessageRef,
-}) => {
+const MessagePanel = forwardRef((props, lastMessageRef) => {
+  const { currentUser, selectedUser, messages, onNewMessage } = props;
+
   if (!selectedUser) {
     return (
       <main id="message-panel">
@@ -19,14 +21,26 @@ const MessagePanel = ({
     <main id="message-panel">
       <ProfileInfo user={selectedUser} />
       <MessageList
+        ref={lastMessageRef}
         messages={messages}
         currentUserId={currentUser.id}
         userPicUrl={selectedUser.picture}
-        lastMessageRef={lastMessageRef}
       />
       <NewMessageForm userId={selectedUser.id} onSend={onNewMessage} />
     </main>
   );
+});
+
+MessagePanel.propTypes = {
+  currentUser: userSchema.isRequired,
+  selectedUser: userSchema,
+  messages: PropTypes.arrayOf(messageSchema).isRequired,
+  onNewMessage: PropTypes.func,
+};
+
+MessagePanel.defaultProps = {
+  selectedUser: null,
+  onNewMessage: f => f,
 };
 
 export default MessagePanel;

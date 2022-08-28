@@ -1,7 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './NewMessageForm.css';
 
-const NewMessageForm = ({ userId, onSend = f => f }) => {
+const NewMessageForm = ({ userId, onSend }) => {
   const inputRef = React.createRef();
   return (
     <form id="new-message" onSubmit={e => onSend(e, inputRef.current, userId)}>
@@ -13,6 +14,15 @@ const NewMessageForm = ({ userId, onSend = f => f }) => {
       </button>
     </form>
   );
+};
+
+NewMessageForm.propTypes = {
+  userId: PropTypes.string.isRequired,
+  onSend: PropTypes.func,
+};
+
+NewMessageForm.defaultProps = {
+  onSend: f => f,
 };
 
 export default NewMessageForm;

@@ -1,4 +1,5 @@
 import React, { Component, createRef } from 'react';
+import { userSchema } from '../utils/schemas';
 import { getChats, getSearch, getMessages, postMessage } from '../utils/request';
 import { sessionRetrieve, sessionSave } from '../utils/session';
 import { notifyMessage } from '../utils/notify';
@@ -33,12 +34,12 @@ class App extends Component {
   }
 
   componentDidMount() {
-    const { selectedUser, messages, chats } = this.state;
+    const { selectedUser, messages, chats: chatsInit } = this.state;
     const { current: lastMessage } = this.lastMessageRef;
     if (selectedUser && messages.length > 0) {
       lastMessage.scrollIntoView();
     }
-    if (!chats.length) {
+    if (!chatsInit.length) {
       getChats().then(data => {
         const { chats } = data;
         this.setState({ chats });
@@ -97,7 +98,7 @@ class App extends Component {
 
     const popup = notifyMessage(replyMessage, replyUser);
     popup.onclick = () => {
-      this.onChatSelect(replyUser.id)
+      this.onChatSelect(replyUser.id);
     };
   }
 
@@ -107,12 +108,12 @@ class App extends Component {
 
     const { currentUser, messages, chats, selectedUser } = this.state;
 
-    const newMessage = {
+    const newMessage = JSON.parse(JSON.stringify({
       fromUser: currentUser.id,
       toUser,
       text: inputElem.value,
       sentOn: new Date(),
-    };
+    }));
     inputElem.value = '';
 
     const updatedChats = [
@@ -132,10 +133,6 @@ class App extends Component {
   }
 
   render() {
-    if (this.state.loading) {
-      return <div>Loading...</div>;
-    }
-
     const { currentUser, selectedUser, chats, messages, searching, searchMatch } = this.state;
     const { onNewMessage, onChatSelect, onChatSearch, lastMessageRef } = this;
 
@@ -148,15 +145,19 @@ class App extends Component {
           onSearch={onChatSearch}
         />
         <MessagePanel
+          ref={lastMessageRef}
           currentUser={currentUser}
           selectedUser={selectedUser}
           messages={messages}
           onNewMessage={onNewMessage}
-          lastMessageRef={lastMessageRef}
         />
       </>
     );
   }
 }
+
+App.propTypes = {
+  currentUser: userSchema.isRequired,
+};
 
 export default App;

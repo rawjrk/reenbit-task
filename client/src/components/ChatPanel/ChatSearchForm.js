@@ -1,7 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './ChatSearchForm.css';
 
-const ChatSearchForm = ({ onSearch = f => f }) => {
+const ChatSearchForm = ({ onSearch }) => {
   const inputRef = React.createRef();
   return (
     <form id="chat-search" onSubmit={e => e.preventDefault()}>
@@ -11,6 +12,14 @@ const ChatSearchForm = ({ onSearch = f => f }) => {
       <input onInput={e => onSearch(e, inputRef.current)} ref={inputRef} placeholder="Search or start new chat" />
     </form>
   );
+};
+
+ChatSearchForm.propTypes = {
+  onSearch: PropTypes.func,
+};
+
+ChatSearchForm.defaultProps = {
+  onSearch: f => f,
 };
 
 export default ChatSearchForm;

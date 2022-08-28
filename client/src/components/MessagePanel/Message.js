@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
+import PropTypes from 'prop-types';
 import { datetimeToMessageFormat } from '../../utils/dt';
 import UserPicture from '../common/UserPicture';
 import './Message.css';
 
-const Message = React.forwardRef((props, ref) => {
+const Message = forwardRef((props, ref) => {
   const { text, sentOn, isIncoming, userPicUrl } = props;
 
   const ioClass = isIncoming ? 'incoming' : 'outcoming';
@@ -17,5 +18,12 @@ const Message = React.forwardRef((props, ref) => {
     </section>
   );
 });
+
+Message.propTypes = {
+  text: PropTypes.string.isRequired,
+  sentOn: PropTypes.string.isRequired,
+  isIncoming: PropTypes.bool.isRequired,
+  userPicUrl: PropTypes.string.isRequired,
+};
 
 export default Message;
