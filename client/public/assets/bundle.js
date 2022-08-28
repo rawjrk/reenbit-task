@@ -16,9 +16,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _utils_request__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/request */ "./src/utils/request.js");
 /* harmony import */ var _utils_session__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/session */ "./src/utils/session.js");
-/* harmony import */ var _ChatPanel__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ChatPanel */ "./src/components/ChatPanel/index.js");
-/* harmony import */ var _MessagePanel__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./MessagePanel */ "./src/components/MessagePanel/index.js");
-/* harmony import */ var _App_css__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./App.css */ "./src/components/App.css");
+/* harmony import */ var _utils_notify__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/notify */ "./src/utils/notify.js");
+/* harmony import */ var _ChatPanel__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ChatPanel */ "./src/components/ChatPanel/index.js");
+/* harmony import */ var _MessagePanel__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./MessagePanel */ "./src/components/MessagePanel/index.js");
+/* harmony import */ var _App_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./App.css */ "./src/components/App.css");
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
@@ -52,6 +53,7 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
 
 
 
@@ -205,21 +207,30 @@ var App = /*#__PURE__*/function (_Component) {
         messages: [].concat(_toConsumableArray(messages), [newMessage])
       });
       (0,_utils_request__WEBPACK_IMPORTED_MODULE_1__.postMessage)(newMessage).then(function (body) {
-        var reply = body.reply;
+        var replyMessage = body.message,
+            replyUser = body.user;
         var _this5$state = _this5.state,
             messages = _this5$state.messages,
-            chats = _this5$state.chats;
+            chats = _this5$state.chats,
+            selectedUser = _this5$state.selectedUser;
         var updatedChats = [{
-          user: selectedUser,
-          message: reply
+          user: replyUser,
+          message: replyMessage
         }].concat(_toConsumableArray(chats.filter(function (chat) {
-          return chat.user.id !== selectedUser.id;
+          return chat.user.id !== replyUser.id;
         })));
 
         _this5.setState({
-          chats: updatedChats,
-          messages: [].concat(_toConsumableArray(messages), [reply])
+          chats: updatedChats
         });
+
+        if (selectedUser.id === replyUser.id) {
+          _this5.setState({
+            messages: [].concat(_toConsumableArray(messages), [replyMessage])
+          });
+        }
+
+        (0,_utils_notify__WEBPACK_IMPORTED_MODULE_3__.notifyMessage)(replyMessage, replyUser);
       });
     }
   }, {
@@ -240,12 +251,12 @@ var App = /*#__PURE__*/function (_Component) {
           onChatSelect = this.onChatSelect,
           onChatSearch = this.onChatSearch,
           lastMessageRef = this.lastMessageRef;
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_ChatPanel__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_ChatPanel__WEBPACK_IMPORTED_MODULE_4__["default"], {
         currentUser: currentUser,
         chats: searching ? searchMatch : chats,
         onSelect: onChatSelect,
         onSearch: onChatSearch
-      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_MessagePanel__WEBPACK_IMPORTED_MODULE_4__["default"], {
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_MessagePanel__WEBPACK_IMPORTED_MODULE_5__["default"], {
         currentUser: currentUser,
         selectedUser: selectedUser,
         messages: messages,
@@ -792,6 +803,38 @@ var datetimeToChatFormat = bindFormat({
   month: 'short',
   day: 'numeric'
 });
+
+/***/ }),
+
+/***/ "./src/utils/notify.js":
+/*!*****************************!*\
+  !*** ./src/utils/notify.js ***!
+  \*****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+/* harmony export */   "notifyMessage": () => (/* binding */ notifyMessage)
+/* harmony export */ });
+var notify = function notify(header, body, icon) {
+  var popup = new Notification(header, {
+    body: body,
+    icon: icon
+  });
+  setTimeout(function () {
+    return popup.close();
+  }, 10 * 1000);
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (notify);
+var notifyMessage = function notifyMessage(message, user) {
+  var name = user.name,
+      picture = user.picture;
+  var text = message.text;
+  notify(name, text, picture);
+};
 
 /***/ }),
 
@@ -36546,7 +36589,12 @@ __webpack_require__.r(__webpack_exports__);
 
 window.React = (react__WEBPACK_IMPORTED_MODULE_0___default());
 var container = document.getElementById('app');
-var root = (0,react_dom_client__WEBPACK_IMPORTED_MODULE_1__.createRoot)(container); // no login api, so this is a constant value
+var root = (0,react_dom_client__WEBPACK_IMPORTED_MODULE_1__.createRoot)(container);
+
+if (Notification.permission === 'default') {
+  Notification.requestPermission();
+} // no login api, so this is a constant value
+
 
 var currentUser = {
   id: 'literally-me',

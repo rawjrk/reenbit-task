@@ -1,6 +1,7 @@
 import React, { Component, createRef } from 'react';
 import { getChats, getSearch, getMessages, postMessage } from '../utils/request';
 import { sessionRetrieve, sessionSave } from '../utils/session';
+import { notifyMessage } from '../utils/notify';
 import ChatPanel from './ChatPanel';
 import MessagePanel from './MessagePanel';
 import './App.css';
@@ -105,18 +106,20 @@ class App extends Component {
     });
 
     postMessage(newMessage).then(body => {
-      const { reply } = body;
-      const { messages, chats } = this.state;
+      const { message: replyMessage, user: replyUser } = body;
+      const { messages, chats, selectedUser } = this.state;
 
       const updatedChats = [
-        { user: selectedUser, message: reply },
-        ...chats.filter(chat => chat.user.id !== selectedUser.id),
+        { user: replyUser, message: replyMessage },
+        ...chats.filter(chat => chat.user.id !== replyUser.id),
       ];
+      this.setState({ chats: updatedChats });
 
-      this.setState({
-        chats: updatedChats,
-        messages: [...messages, reply],
-      });
+      if (selectedUser.id === replyUser.id) {
+        this.setState({ messages: [...messages, replyMessage] });
+      }
+
+      notifyMessage(replyMessage, replyUser);
     });
   }
 

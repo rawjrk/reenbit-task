@@ -30,9 +30,12 @@ module.exports.postMessages = (req, res) => {
         };
         writeData('messages', [...messages, newMessage, replyMessage]);
 
+        const replyUser = readData('users')
+            .find(user => user.id === replyMessage.fromUser);
+
         const delaySeconds = Math.floor((Math.random() * 6)) + 10;
         setTimeout(() => {
-          res.send({ reply: replyMessage });
+          res.send({ user: replyUser, message: replyMessage });
         }, delaySeconds * 1000);
       });
 };
