@@ -20,7 +20,7 @@ module.exports.seedMessages = users => {
     messages.push({
       fromUser: u.id,
       toUser: currentUser.id,
-      text: 'Hi!',
+      text: 'Hello!',
       sentOn: new Date(),
     });
     // -- 2 -- //
