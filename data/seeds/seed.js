@@ -1,10 +1,6 @@
-const { writeData } = require('../manip');
+const { readData, writeData } = require('../manip');
 
-const currentUser = {
-  'id': 'literally-me',
-  'name': '',
-  'picture': 'assets/images/no-profile-picture.jpg',
-};
+const currentUser = readData('currentUser');
 
 module.exports.seedUsers = users => {
   writeData('users', [...users, currentUser]);

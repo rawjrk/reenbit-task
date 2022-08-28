@@ -1,7 +1,8 @@
 const { readData } = require('../data/manip');
 
 // no login api, so this is a constant value
-const currentUserId = 'literally-me';
+const currentUser = readData('currentUser');
+const { id: currentUserId } = currentUser;
 
 module.exports.getSearch = (req, res) => {
   const { q } = req.query;

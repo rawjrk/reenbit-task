@@ -1,5 +1,5 @@
 import React, { Component, createRef } from 'react';
-import { getSearch, getMessages, postMessage } from '../utils/request';
+import { getChats, getSearch, getMessages, postMessage } from '../utils/request';
 import { sessionRetrieve, sessionSave } from '../utils/session';
 import ChatPanel from './ChatPanel';
 import MessagePanel from './MessagePanel';
@@ -9,9 +9,10 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    const { currentUser, chats } = this.props;
+    const { currentUser } = this.props;
     const selectedUser = sessionRetrieve('selectedUser') || null;
     const messages = sessionRetrieve('messages') || [];
+    const chats = sessionRetrieve('chats') || [];
 
     this.state = {
       currentUser,
@@ -30,19 +31,28 @@ class App extends Component {
   }
 
   componentDidMount() {
-    const { messages } = this.state;
+    const { selectedUser, messages, chats } = this.state;
     const { current: lastMessage } = this.lastMessageRef;
-    if (messages.length > 0) {
+    if (selectedUser && messages.length > 0) {
       lastMessage.scrollIntoView();
+    }
+    if (!chats.length) {
+      getChats().then(data => {
+        const { chats } = data;
+        this.setState({ chats });
+      });
     }
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { messages } = this.state;
+    const { messages, chats } = this.state;
     const { current: lastMessage } = this.lastMessageRef;
     if (messages !== prevState.messages) {
       lastMessage.scrollIntoView();
       sessionSave('messages', messages);
+    }
+    if (chats !== prevState.chats) {
+      sessionSave('chats', chats);
     }
   }
 
@@ -74,7 +84,7 @@ class App extends Component {
     e.preventDefault();
     if (!inputElem.value) return;
 
-    const { currentUser, messages } = this.state;
+    const { currentUser, messages, chats, selectedUser } = this.state;
 
     const newMessage = {
       fromUser: currentUser.id,
@@ -82,14 +92,31 @@ class App extends Component {
       text: inputElem.value,
       sentOn: new Date(),
     };
-
     inputElem.value = '';
-    this.setState({ messages: [...messages, newMessage] });
+
+    const updatedChats = [
+      { user: selectedUser, message: newMessage },
+      ...chats.filter(chat => chat.user.id !== selectedUser.id),
+    ];
+
+    this.setState({
+      chats: updatedChats,
+      messages: [...messages, newMessage],
+    });
 
     postMessage(newMessage).then(body => {
       const { reply } = body;
-      const { messages } = this.state;
-      this.setState({ messages: [...messages, reply] });
+      const { messages, chats } = this.state;
+
+      const updatedChats = [
+        { user: selectedUser, message: reply },
+        ...chats.filter(chat => chat.user.id !== selectedUser.id),
+      ];
+
+      this.setState({
+        chats: updatedChats,
+        messages: [...messages, reply],
+      });
     });
   }
 

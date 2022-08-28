@@ -71,11 +71,10 @@ var App = /*#__PURE__*/function (_Component) {
     _classCallCheck(this, App);
 
     _this = _super.call(this, props);
-    var _this$props = _this.props,
-        currentUser = _this$props.currentUser,
-        chats = _this$props.chats;
+    var currentUser = _this.props.currentUser;
     var selectedUser = (0,_utils_session__WEBPACK_IMPORTED_MODULE_2__.sessionRetrieve)('selectedUser') || null;
     var messages = (0,_utils_session__WEBPACK_IMPORTED_MODULE_2__.sessionRetrieve)('messages') || [];
+    var chats = (0,_utils_session__WEBPACK_IMPORTED_MODULE_2__.sessionRetrieve)('chats') || [];
     _this.state = {
       currentUser: currentUser,
       chats: chats,
@@ -94,28 +93,49 @@ var App = /*#__PURE__*/function (_Component) {
   _createClass(App, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      var messages = this.state.messages;
+      var _this2 = this;
+
+      var _this$state = this.state,
+          selectedUser = _this$state.selectedUser,
+          messages = _this$state.messages,
+          chats = _this$state.chats;
       var lastMessage = this.lastMessageRef.current;
 
-      if (messages.length > 0) {
+      if (selectedUser && messages.length > 0) {
         lastMessage.scrollIntoView();
+      }
+
+      if (!chats.length) {
+        (0,_utils_request__WEBPACK_IMPORTED_MODULE_1__.getChats)().then(function (data) {
+          var chats = data.chats;
+
+          _this2.setState({
+            chats: chats
+          });
+        });
       }
     }
   }, {
     key: "componentDidUpdate",
     value: function componentDidUpdate(prevProps, prevState) {
-      var messages = this.state.messages;
+      var _this$state2 = this.state,
+          messages = _this$state2.messages,
+          chats = _this$state2.chats;
       var lastMessage = this.lastMessageRef.current;
 
       if (messages !== prevState.messages) {
         lastMessage.scrollIntoView();
         (0,_utils_session__WEBPACK_IMPORTED_MODULE_2__.sessionSave)('messages', messages);
       }
+
+      if (chats !== prevState.chats) {
+        (0,_utils_session__WEBPACK_IMPORTED_MODULE_2__.sessionSave)('chats', chats);
+      }
     }
   }, {
     key: "onChatSearch",
     value: function onChatSearch(e, inputElem) {
-      var _this2 = this;
+      var _this3 = this;
 
       e.preventDefault();
 
@@ -131,7 +151,7 @@ var App = /*#__PURE__*/function (_Component) {
       (0,_utils_request__WEBPACK_IMPORTED_MODULE_1__.getSearch)(queryStr).then(function (data) {
         var searchMatch = data.searchMatch;
 
-        _this2.setState({
+        _this3.setState({
           searching: true,
           searchMatch: searchMatch
         });
@@ -140,13 +160,13 @@ var App = /*#__PURE__*/function (_Component) {
   }, {
     key: "onChatSelect",
     value: function onChatSelect(userId) {
-      var _this3 = this;
+      var _this4 = this;
 
       (0,_utils_request__WEBPACK_IMPORTED_MODULE_1__.getMessages)(userId).then(function (data) {
         var user = data.user,
             messages = data.messages;
 
-        _this3.setState({
+        _this4.setState({
           selectedUser: user,
           messages: messages
         });
@@ -158,13 +178,15 @@ var App = /*#__PURE__*/function (_Component) {
   }, {
     key: "onNewMessage",
     value: function onNewMessage(e, inputElem, toUser) {
-      var _this4 = this;
+      var _this5 = this;
 
       e.preventDefault();
       if (!inputElem.value) return;
-      var _this$state = this.state,
-          currentUser = _this$state.currentUser,
-          messages = _this$state.messages;
+      var _this$state3 = this.state,
+          currentUser = _this$state3.currentUser,
+          messages = _this$state3.messages,
+          chats = _this$state3.chats,
+          selectedUser = _this$state3.selectedUser;
       var newMessage = {
         fromUser: currentUser.id,
         toUser: toUser,
@@ -172,14 +194,30 @@ var App = /*#__PURE__*/function (_Component) {
         sentOn: new Date()
       };
       inputElem.value = '';
+      var updatedChats = [{
+        user: selectedUser,
+        message: newMessage
+      }].concat(_toConsumableArray(chats.filter(function (chat) {
+        return chat.user.id !== selectedUser.id;
+      })));
       this.setState({
+        chats: updatedChats,
         messages: [].concat(_toConsumableArray(messages), [newMessage])
       });
       (0,_utils_request__WEBPACK_IMPORTED_MODULE_1__.postMessage)(newMessage).then(function (body) {
         var reply = body.reply;
-        var messages = _this4.state.messages;
+        var _this5$state = _this5.state,
+            messages = _this5$state.messages,
+            chats = _this5$state.chats;
+        var updatedChats = [{
+          user: selectedUser,
+          message: reply
+        }].concat(_toConsumableArray(chats.filter(function (chat) {
+          return chat.user.id !== selectedUser.id;
+        })));
 
-        _this4.setState({
+        _this5.setState({
+          chats: updatedChats,
           messages: [].concat(_toConsumableArray(messages), [reply])
         });
       });
@@ -191,13 +229,13 @@ var App = /*#__PURE__*/function (_Component) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "Loading...");
       }
 
-      var _this$state2 = this.state,
-          currentUser = _this$state2.currentUser,
-          selectedUser = _this$state2.selectedUser,
-          chats = _this$state2.chats,
-          messages = _this$state2.messages,
-          searching = _this$state2.searching,
-          searchMatch = _this$state2.searchMatch;
+      var _this$state4 = this.state,
+          currentUser = _this$state4.currentUser,
+          selectedUser = _this$state4.selectedUser,
+          chats = _this$state4.chats,
+          messages = _this$state4.messages,
+          searching = _this$state4.searching,
+          searchMatch = _this$state4.searchMatch;
       var onNewMessage = this.onNewMessage,
           onChatSelect = this.onChatSelect,
           onChatSearch = this.onChatSearch,
@@ -36500,25 +36538,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_dom_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom/client */ "./node_modules/react-dom/client.js");
-/* harmony import */ var _utils_request__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils/request */ "./src/utils/request.js");
-/* harmony import */ var _components_App__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/App */ "./src/components/App.js");
-/* harmony import */ var _index_css__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./index.css */ "./src/index.css");
-
+/* harmony import */ var _components_App__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/App */ "./src/components/App.js");
+/* harmony import */ var _index_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./index.css */ "./src/index.css");
 
 
 
 
 window.React = (react__WEBPACK_IMPORTED_MODULE_0___default());
 var container = document.getElementById('app');
-var root = (0,react_dom_client__WEBPACK_IMPORTED_MODULE_1__.createRoot)(container);
-(0,_utils_request__WEBPACK_IMPORTED_MODULE_2__.getChats)().then(function (data) {
-  var currentUser = data.currentUser,
-      chats = data.chats;
-  root.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_App__WEBPACK_IMPORTED_MODULE_3__["default"], {
-    currentUser: currentUser,
-    chats: chats
-  }));
-});
+var root = (0,react_dom_client__WEBPACK_IMPORTED_MODULE_1__.createRoot)(container); // no login api, so this is a constant value
+
+var currentUser = {
+  id: 'literally-me',
+  name: '',
+  picture: 'assets/images/no-profile-picture.jpg'
+};
+root.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_App__WEBPACK_IMPORTED_MODULE_2__["default"], {
+  currentUser: currentUser
+}));
 })();
 
 /******/ })()
