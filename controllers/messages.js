@@ -29,6 +29,10 @@ module.exports.postMessages = (req, res) => {
           sentOn: new Date(),
         };
         writeData('messages', [...messages, newMessage, replyMessage]);
-        res.send({ reply: replyMessage });
+
+        const delaySeconds = Math.floor((Math.random() * 6)) + 10;
+        setTimeout(() => {
+          res.send({ reply: replyMessage });
+        }, delaySeconds * 1000);
       });
 };
