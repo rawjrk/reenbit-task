@@ -7,3 +7,9 @@
 .profile-info .profile-name {
   margin-left: var(--pane-padding);
 }
+
+.profile-info .status-overlay {
+  position: relative;
+  right: calc(var(--thumbnail-size));
+  bottom: calc(var(--thumbnail-size) / 2);
+}

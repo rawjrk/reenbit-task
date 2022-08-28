@@ -14,10 +14,15 @@
   margin: auto;
 }
 
-.profile-picture {
-  width: var(--thumbnail-size);
-  height: var(--thumbnail-size);
-  border-radius: 50%;
+.status-overlay {
+  position: relative;
+}
+
+.status-overlay::after {
+  content: var(--online-icon);
+  position: absolute;
+  top: calc(var(--thumbnail-size) - var(--online-icon-size));
+  left: calc(var(--thumbnail-size) - var(--online-icon-size));
 }
 
 .message-text {

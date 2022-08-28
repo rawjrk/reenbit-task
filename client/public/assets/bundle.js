@@ -299,7 +299,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _utils_dt__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils/dt */ "./src/utils/dt.js");
-/* harmony import */ var _Chat_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Chat.css */ "./src/components/ChatPanel/Chat.css");
+/* harmony import */ var _common_UserPicture__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../common/UserPicture */ "./src/components/common/UserPicture.js");
+/* harmony import */ var _Chat_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Chat.css */ "./src/components/ChatPanel/Chat.css");
+
 
 
 
@@ -315,10 +317,10 @@ var Chat = function Chat(_ref) {
     className: "chat",
     onClick: onClick,
     role: "button"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
-    src: user.picture,
-    className: "profile-picture",
-    alt: "profile"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+    className: "status-overlay"
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_common_UserPicture__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    url: user.picture
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", {
     className: "profile-name"
   }, user.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", {
@@ -736,6 +738,8 @@ var ProfileInfo = function ProfileInfo(_ref) {
     className: "profile-info"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_UserPicture__WEBPACK_IMPORTED_MODULE_1__["default"], {
     url: user.picture
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+    className: "status-overlay"
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h2", {
     className: "profile-name"
   }, user.name));
@@ -1060,7 +1064,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "#app {\r\n  display: flex;\r\n  width: 100vw;\r\n  height: 100vh;\r\n}\r\n\r\n#app main {\r\n  height: 100vh;\r\n}\r\n\r\n#app .loading {\r\n  align-self: center;\r\n  justify-self: center;\r\n  margin: auto;\r\n}\r\n\r\n.profile-picture {\r\n  width: var(--thumbnail-size);\r\n  height: var(--thumbnail-size);\r\n  border-radius: 50%;\r\n}\r\n\r\n.message-text {\r\n  font-size: 0.95rem;\r\n}\r\n\r\ninput:focus {\r\n  outline: 1px solid var(--muted-text-color);\r\n}", "",{"version":3,"sources":["webpack://./src/components/App.css"],"names":[],"mappings":"AAAA;EACE,aAAa;EACb,YAAY;EACZ,aAAa;AACf;;AAEA;EACE,aAAa;AACf;;AAEA;EACE,kBAAkB;EAClB,oBAAoB;EACpB,YAAY;AACd;;AAEA;EACE,4BAA4B;EAC5B,6BAA6B;EAC7B,kBAAkB;AACpB;;AAEA;EACE,kBAAkB;AACpB;;AAEA;EACE,0CAA0C;AAC5C","sourcesContent":["#app {\r\n  display: flex;\r\n  width: 100vw;\r\n  height: 100vh;\r\n}\r\n\r\n#app main {\r\n  height: 100vh;\r\n}\r\n\r\n#app .loading {\r\n  align-self: center;\r\n  justify-self: center;\r\n  margin: auto;\r\n}\r\n\r\n.profile-picture {\r\n  width: var(--thumbnail-size);\r\n  height: var(--thumbnail-size);\r\n  border-radius: 50%;\r\n}\r\n\r\n.message-text {\r\n  font-size: 0.95rem;\r\n}\r\n\r\ninput:focus {\r\n  outline: 1px solid var(--muted-text-color);\r\n}"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "#app {\r\n  display: flex;\r\n  width: 100vw;\r\n  height: 100vh;\r\n}\r\n\r\n#app main {\r\n  height: 100vh;\r\n}\r\n\r\n#app .loading {\r\n  align-self: center;\r\n  justify-self: center;\r\n  margin: auto;\r\n}\r\n\r\n.status-overlay {\r\n  position: relative;\r\n}\r\n\r\n.status-overlay::after {\r\n  content: var(--online-icon);\r\n  position: absolute;\r\n  top: calc(var(--thumbnail-size) - var(--online-icon-size));\r\n  left: calc(var(--thumbnail-size) - var(--online-icon-size));\r\n}\r\n\r\n.message-text {\r\n  font-size: 0.95rem;\r\n}\r\n\r\ninput:focus {\r\n  outline: 1px solid var(--muted-text-color);\r\n}", "",{"version":3,"sources":["webpack://./src/components/App.css"],"names":[],"mappings":"AAAA;EACE,aAAa;EACb,YAAY;EACZ,aAAa;AACf;;AAEA;EACE,aAAa;AACf;;AAEA;EACE,kBAAkB;EAClB,oBAAoB;EACpB,YAAY;AACd;;AAEA;EACE,kBAAkB;AACpB;;AAEA;EACE,2BAA2B;EAC3B,kBAAkB;EAClB,0DAA0D;EAC1D,2DAA2D;AAC7D;;AAEA;EACE,kBAAkB;AACpB;;AAEA;EACE,0CAA0C;AAC5C","sourcesContent":["#app {\r\n  display: flex;\r\n  width: 100vw;\r\n  height: 100vh;\r\n}\r\n\r\n#app main {\r\n  height: 100vh;\r\n}\r\n\r\n#app .loading {\r\n  align-self: center;\r\n  justify-self: center;\r\n  margin: auto;\r\n}\r\n\r\n.status-overlay {\r\n  position: relative;\r\n}\r\n\r\n.status-overlay::after {\r\n  content: var(--online-icon);\r\n  position: absolute;\r\n  top: calc(var(--thumbnail-size) - var(--online-icon-size));\r\n  left: calc(var(--thumbnail-size) - var(--online-icon-size));\r\n}\r\n\r\n.message-text {\r\n  font-size: 0.95rem;\r\n}\r\n\r\ninput:focus {\r\n  outline: 1px solid var(--muted-text-color);\r\n}"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -1303,7 +1307,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".profile-info {\r\n  display: flex;\r\n  align-items: center;\r\n  padding: var(--pane-padding);\r\n}\r\n\r\n.profile-info .profile-name {\r\n  margin-left: var(--pane-padding);\r\n}", "",{"version":3,"sources":["webpack://./src/components/common/ProfileInfo.css"],"names":[],"mappings":"AAAA;EACE,aAAa;EACb,mBAAmB;EACnB,4BAA4B;AAC9B;;AAEA;EACE,gCAAgC;AAClC","sourcesContent":[".profile-info {\r\n  display: flex;\r\n  align-items: center;\r\n  padding: var(--pane-padding);\r\n}\r\n\r\n.profile-info .profile-name {\r\n  margin-left: var(--pane-padding);\r\n}"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, ".profile-info {\r\n  display: flex;\r\n  align-items: center;\r\n  padding: var(--pane-padding);\r\n}\r\n\r\n.profile-info .profile-name {\r\n  margin-left: var(--pane-padding);\r\n}\r\n\r\n.profile-info .status-overlay {\r\n  position: relative;\r\n  right: calc(var(--thumbnail-size));\r\n  bottom: calc(var(--thumbnail-size) / 2);\r\n}", "",{"version":3,"sources":["webpack://./src/components/common/ProfileInfo.css"],"names":[],"mappings":"AAAA;EACE,aAAa;EACb,mBAAmB;EACnB,4BAA4B;AAC9B;;AAEA;EACE,gCAAgC;AAClC;;AAEA;EACE,kBAAkB;EAClB,kCAAkC;EAClC,uCAAuC;AACzC","sourcesContent":[".profile-info {\r\n  display: flex;\r\n  align-items: center;\r\n  padding: var(--pane-padding);\r\n}\r\n\r\n.profile-info .profile-name {\r\n  margin-left: var(--pane-padding);\r\n}\r\n\r\n.profile-info .status-overlay {\r\n  position: relative;\r\n  right: calc(var(--thumbnail-size));\r\n  bottom: calc(var(--thumbnail-size) / 2);\r\n}"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -1352,12 +1356,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
 /* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../node_modules/css-loader/dist/runtime/getUrl.js */ "./node_modules/css-loader/dist/runtime/getUrl.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2__);
 // Imports
 
 
+
+var ___CSS_LOADER_URL_IMPORT_0___ = new URL(/* asset import */ __webpack_require__(/*! data:image/svg+xml;utf8,<svg xmlns=%27http://www.w3.org/2000/svg%27 width=%2716%27 height=%2716%27 fill=%27%234caf50%27 viewBox=%270 0 330 330%27><path d=%27M165,0C74.019,0,0,74.019,0,165s74.019,165,165,165s165-74.019,165-165S255.981,0,165,0z M165,300   c-74.44,0-135-60.561-135-135S90.56,30,165,30s135,60.561,135,135S239.439,300,165,300z%27/><path d=%27M226.872,106.664l-84.854,84.853l-38.89-38.891c-5.857-5.857-15.355-5.858-21.213-0.001   c-5.858,5.858-5.858,15.355,0,21.213l49.496,49.498c2.813,2.813,6.628,4.394,10.606,4.394c0.001,0,0,0,0.001,0   c3.978,0,7.793-1.581,10.606-4.393l95.461-95.459c5.858-5.858,5.858-15.355,0-21.213   C242.227,100.807,232.73,100.806,226.872,106.664z%27/></svg> */ "data:image/svg+xml;utf8,<svg xmlns=%27http://www.w3.org/2000/svg%27 width=%2716%27 height=%2716%27 fill=%27%234caf50%27 viewBox=%270 0 330 330%27><path d=%27M165,0C74.019,0,0,74.019,0,165s74.019,165,165,165s165-74.019,165-165S255.981,0,165,0z M165,300   c-74.44,0-135-60.561-135-135S90.56,30,165,30s135,60.561,135,135S239.439,300,165,300z%27/><path d=%27M226.872,106.664l-84.854,84.853l-38.89-38.891c-5.857-5.857-15.355-5.858-21.213-0.001   c-5.858,5.858-5.858,15.355,0,21.213l49.496,49.498c2.813,2.813,6.628,4.394,10.606,4.394c0.001,0,0,0,0.001,0   c3.978,0,7.793-1.581,10.606-4.393l95.461-95.459c5.858-5.858,5.858-15.355,0-21.213   C242.227,100.807,232.73,100.806,226.872,106.664z%27/></svg>"), __webpack_require__.b);
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
+var ___CSS_LOADER_URL_REPLACEMENT_0___ = _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2___default()(___CSS_LOADER_URL_IMPORT_0___);
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ":root {\r\n  --pane-padding: 15px;\r\n  --thumbnail-size: 48px;\r\n  --online-color: #4caf50;\r\n  --header-color: #00bcd4;\r\n  --border-color: #dddddd;\r\n  --muted-text-color: #9e9e9e;\r\n  --light-bg-color: #f5f5f5;\r\n  --msg-block-bg: #fafafa;\r\n  --msg-primary-bg: #3d414e;\r\n  --msg-primary-text: #fff;\r\n  --msg-secondary-bg: #e0e0e0;\r\n  --msg-secondary-text: #000;\r\n}\r\n\r\nbody {\r\n  font-family: 'Open Sans', sans-serif;\r\n  margin: 0;\r\n}", "",{"version":3,"sources":["webpack://./src/index.css"],"names":[],"mappings":"AAAA;EACE,oBAAoB;EACpB,sBAAsB;EACtB,uBAAuB;EACvB,uBAAuB;EACvB,uBAAuB;EACvB,2BAA2B;EAC3B,yBAAyB;EACzB,uBAAuB;EACvB,yBAAyB;EACzB,wBAAwB;EACxB,2BAA2B;EAC3B,0BAA0B;AAC5B;;AAEA;EACE,oCAAoC;EACpC,SAAS;AACX","sourcesContent":[":root {\r\n  --pane-padding: 15px;\r\n  --thumbnail-size: 48px;\r\n  --online-color: #4caf50;\r\n  --header-color: #00bcd4;\r\n  --border-color: #dddddd;\r\n  --muted-text-color: #9e9e9e;\r\n  --light-bg-color: #f5f5f5;\r\n  --msg-block-bg: #fafafa;\r\n  --msg-primary-bg: #3d414e;\r\n  --msg-primary-text: #fff;\r\n  --msg-secondary-bg: #e0e0e0;\r\n  --msg-secondary-text: #000;\r\n}\r\n\r\nbody {\r\n  font-family: 'Open Sans', sans-serif;\r\n  margin: 0;\r\n}"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, ":root {\r\n  --pane-padding: 15px;\r\n  --thumbnail-size: 48px;\r\n  --online-icon: url(" + ___CSS_LOADER_URL_REPLACEMENT_0___ + ");\r\n  --online-icon-size: 16px;\r\n  --online-color: #4caf50;\r\n  --header-color: #00bcd4;\r\n  --border-color: #dddddd;\r\n  --muted-text-color: #9e9e9e;\r\n  --light-bg-color: #f5f5f5;\r\n  --msg-block-bg: #fafafa;\r\n  --msg-primary-bg: #3d414e;\r\n  --msg-primary-text: #fff;\r\n  --msg-secondary-bg: #e0e0e0;\r\n  --msg-secondary-text: #000;\r\n}\r\n\r\nbody {\r\n  font-family: 'Open Sans', sans-serif;\r\n  margin: 0;\r\n}", "",{"version":3,"sources":["webpack://./src/index.css"],"names":[],"mappings":"AAAA;EACE,oBAAoB;EACpB,sBAAsB;EACtB,sDAA+qB;EAC/qB,wBAAwB;EACxB,uBAAuB;EACvB,uBAAuB;EACvB,uBAAuB;EACvB,2BAA2B;EAC3B,yBAAyB;EACzB,uBAAuB;EACvB,yBAAyB;EACzB,wBAAwB;EACxB,2BAA2B;EAC3B,0BAA0B;AAC5B;;AAEA;EACE,oCAAoC;EACpC,SAAS;AACX","sourcesContent":[":root {\r\n  --pane-padding: 15px;\r\n  --thumbnail-size: 48px;\r\n  --online-icon: url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%234caf50' viewBox='0 0 330 330'><path d='M165,0C74.019,0,0,74.019,0,165s74.019,165,165,165s165-74.019,165-165S255.981,0,165,0z M165,300   c-74.44,0-135-60.561-135-135S90.56,30,165,30s135,60.561,135,135S239.439,300,165,300z'/><path d='M226.872,106.664l-84.854,84.853l-38.89-38.891c-5.857-5.857-15.355-5.858-21.213-0.001   c-5.858,5.858-5.858,15.355,0,21.213l49.496,49.498c2.813,2.813,6.628,4.394,10.606,4.394c0.001,0,0,0,0.001,0   c3.978,0,7.793-1.581,10.606-4.393l95.461-95.459c5.858-5.858,5.858-15.355,0-21.213   C242.227,100.807,232.73,100.806,226.872,106.664z'/></svg>\");\r\n  --online-icon-size: 16px;\r\n  --online-color: #4caf50;\r\n  --header-color: #00bcd4;\r\n  --border-color: #dddddd;\r\n  --muted-text-color: #9e9e9e;\r\n  --light-bg-color: #f5f5f5;\r\n  --msg-block-bg: #fafafa;\r\n  --msg-primary-bg: #3d414e;\r\n  --msg-primary-text: #fff;\r\n  --msg-secondary-bg: #e0e0e0;\r\n  --msg-secondary-text: #000;\r\n}\r\n\r\nbody {\r\n  font-family: 'Open Sans', sans-serif;\r\n  margin: 0;\r\n}"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -1472,6 +1481,45 @@ module.exports = function (cssWithMappingToString) {
   };
 
   return list;
+};
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/runtime/getUrl.js":
+/*!********************************************************!*\
+  !*** ./node_modules/css-loader/dist/runtime/getUrl.js ***!
+  \********************************************************/
+/***/ ((module) => {
+
+"use strict";
+
+
+module.exports = function (url, options) {
+  if (!options) {
+    options = {};
+  }
+
+  if (!url) {
+    return url;
+  }
+
+  url = String(url.__esModule ? url.default : url); // If url is already wrapped in quotes, remove them
+
+  if (/^['"].*['"]$/.test(url)) {
+    url = url.slice(1, -1);
+  }
+
+  if (options.hash) {
+    url += options.hash;
+  } // Should url be wrapped?
+  // See https://drafts.csswg.org/css-values-3/#urls
+
+
+  if (/["'() \t\n]|(%20)/.test(url) || options.needQuotes) {
+    return "\"".concat(url.replace(/"/g, '\\"').replace(/\n/g, "\\n"), "\"");
+  }
+
+  return url;
 };
 
 /***/ }),
@@ -36497,6 +36545,17 @@ if (!global.fetch) {
 }
 
 
+/***/ }),
+
+/***/ "data:image/svg+xml;utf8,<svg xmlns=%27http://www.w3.org/2000/svg%27 width=%2716%27 height=%2716%27 fill=%27%234caf50%27 viewBox=%270 0 330 330%27><path d=%27M165,0C74.019,0,0,74.019,0,165s74.019,165,165,165s165-74.019,165-165S255.981,0,165,0z M165,300   c-74.44,0-135-60.561-135-135S90.56,30,165,30s135,60.561,135,135S239.439,300,165,300z%27/><path d=%27M226.872,106.664l-84.854,84.853l-38.89-38.891c-5.857-5.857-15.355-5.858-21.213-0.001   c-5.858,5.858-5.858,15.355,0,21.213l49.496,49.498c2.813,2.813,6.628,4.394,10.606,4.394c0.001,0,0,0,0.001,0   c3.978,0,7.793-1.581,10.606-4.393l95.461-95.459c5.858-5.858,5.858-15.355,0-21.213   C242.227,100.807,232.73,100.806,226.872,106.664z%27/></svg>":
+/*!*****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** data:image/svg+xml;utf8,<svg xmlns=%27http://www.w3.org/2000/svg%27 width=%2716%27 height=%2716%27 fill=%27%234caf50%27 viewBox=%270 0 330 330%27><path d=%27M165,0C74.019,0,0,74.019,0,165s74.019,165,165,165s165-74.019,165-165S255.981,0,165,0z M165,300   c-74.44,0-135-60.561-135-135S90.56,30,165,30s135,60.561,135,135S239.439,300,165,300z%27/><path d=%27M226.872,106.664l-84.854,84.853l-38.89-38.891c-5.857-5.857-15.355-5.858-21.213-0.001   c-5.858,5.858-5.858,15.355,0,21.213l49.496,49.498c2.813,2.813,6.628,4.394,10.606,4.394c0.001,0,0,0,0.001,0   c3.978,0,7.793-1.581,10.606-4.393l95.461-95.459c5.858-5.858,5.858-15.355,0-21.213   C242.227,100.807,232.73,100.806,226.872,106.664z%27/></svg> ***!
+  \*****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = "data:image/svg+xml;utf8,<svg xmlns=%27http://www.w3.org/2000/svg%27 width=%2716%27 height=%2716%27 fill=%27%234caf50%27 viewBox=%270 0 330 330%27><path d=%27M165,0C74.019,0,0,74.019,0,165s74.019,165,165,165s165-74.019,165-165S255.981,0,165,0z M165,300   c-74.44,0-135-60.561-135-135S90.56,30,165,30s135,60.561,135,135S239.439,300,165,300z%27/><path d=%27M226.872,106.664l-84.854,84.853l-38.89-38.891c-5.857-5.857-15.355-5.858-21.213-0.001   c-5.858,5.858-5.858,15.355,0,21.213l49.496,49.498c2.813,2.813,6.628,4.394,10.606,4.394c0.001,0,0,0,0.001,0   c3.978,0,7.793-1.581,10.606-4.393l95.461-95.459c5.858-5.858,5.858-15.355,0-21.213   C242.227,100.807,232.73,100.806,226.872,106.664z%27/></svg>";
+
 /***/ })
 
 /******/ 	});
@@ -36527,6 +36586,9 @@ if (!global.fetch) {
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
+/******/ 	
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = __webpack_modules__;
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/compat get default export */
@@ -36576,6 +36638,32 @@ if (!global.fetch) {
 /******/ 			if (!module.children) module.children = [];
 /******/ 			return module;
 /******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/jsonp chunk loading */
+/******/ 	(() => {
+/******/ 		__webpack_require__.b = document.baseURI || self.location.href;
+/******/ 		
+/******/ 		// object to store loaded and loading chunks
+/******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
+/******/ 		var installedChunks = {
+/******/ 			"main": 0
+/******/ 		};
+/******/ 		
+/******/ 		// no chunk on demand loading
+/******/ 		
+/******/ 		// no prefetching
+/******/ 		
+/******/ 		// no preloaded
+/******/ 		
+/******/ 		// no HMR
+/******/ 		
+/******/ 		// no HMR manifest
+/******/ 		
+/******/ 		// no on chunks loaded
+/******/ 		
+/******/ 		// no jsonp function
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/nonce */
