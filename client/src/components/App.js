@@ -42,7 +42,7 @@ class App extends Component {
     const { current: lastMessage } = this.lastMessageRef;
     if (messages !== prevState.messages) {
       lastMessage.scrollIntoView();
-      sessionSave(messages);
+      sessionSave('messages', messages);
     }
   }
 

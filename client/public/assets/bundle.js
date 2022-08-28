@@ -109,7 +109,7 @@ var App = /*#__PURE__*/function (_Component) {
 
       if (messages !== prevState.messages) {
         lastMessage.scrollIntoView();
-        (0,_utils_session__WEBPACK_IMPORTED_MODULE_2__.sessionSave)(messages);
+        (0,_utils_session__WEBPACK_IMPORTED_MODULE_2__.sessionSave)('messages', messages);
       }
     }
   }, {
