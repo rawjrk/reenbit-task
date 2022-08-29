@@ -1,0 +1,92 @@
+[
+  {
+    "fromUser": "dc5fd42e-700e-445d-a334-5f4c13192565",
+    "toUser": "literally-me",
+    "text": "Hello!",
+    "sentOn": "2022-08-29T10:01:31.552Z"
+  },
+  {
+    "fromUser": "literally-me",
+    "toUser": "dc5fd42e-700e-445d-a334-5f4c13192565",
+    "text": "Hi! Tell me a joke.",
+    "sentOn": "2022-08-29T10:01:31.552Z"
+  },
+  {
+    "fromUser": "dc5fd42e-700e-445d-a334-5f4c13192565",
+    "toUser": "literally-me",
+    "text": "Get back to work!",
+    "sentOn": "2022-08-29T10:01:31.552Z"
+  },
+  {
+    "fromUser": "39ce91db-2c1a-4c21-a898-672c2fdf6875",
+    "toUser": "literally-me",
+    "text": "Hello!",
+    "sentOn": "2022-08-29T10:01:31.552Z"
+  },
+  {
+    "fromUser": "literally-me",
+    "toUser": "39ce91db-2c1a-4c21-a898-672c2fdf6875",
+    "text": "Hi! Tell me a joke.",
+    "sentOn": "2022-08-29T10:01:31.552Z"
+  },
+  {
+    "fromUser": "39ce91db-2c1a-4c21-a898-672c2fdf6875",
+    "toUser": "literally-me",
+    "text": "Get back to work!",
+    "sentOn": "2022-08-29T10:01:31.552Z"
+  },
+  {
+    "fromUser": "82921ea4-76df-4432-9cdc-ec4a9cea70a9",
+    "toUser": "literally-me",
+    "text": "Hello!",
+    "sentOn": "2022-08-29T10:01:31.552Z"
+  },
+  {
+    "fromUser": "literally-me",
+    "toUser": "82921ea4-76df-4432-9cdc-ec4a9cea70a9",
+    "text": "Hi! Tell me a joke.",
+    "sentOn": "2022-08-29T10:01:31.552Z"
+  },
+  {
+    "fromUser": "82921ea4-76df-4432-9cdc-ec4a9cea70a9",
+    "toUser": "literally-me",
+    "text": "Get back to work!",
+    "sentOn": "2022-08-29T10:01:31.552Z"
+  },
+  {
+    "fromUser": "69ae48e6-8bf7-4a7c-8776-36db9a2d4479",
+    "toUser": "literally-me",
+    "text": "Hello!",
+    "sentOn": "2022-08-29T10:01:31.552Z"
+  },
+  {
+    "fromUser": "literally-me",
+    "toUser": "69ae48e6-8bf7-4a7c-8776-36db9a2d4479",
+    "text": "Hi! Tell me a joke.",
+    "sentOn": "2022-08-29T10:01:31.552Z"
+  },
+  {
+    "fromUser": "69ae48e6-8bf7-4a7c-8776-36db9a2d4479",
+    "toUser": "literally-me",
+    "text": "Get back to work!",
+    "sentOn": "2022-08-29T10:01:31.552Z"
+  },
+  {
+    "fromUser": "0851a9c3-cb25-4ba9-9112-0a6a73dee0c7",
+    "toUser": "literally-me",
+    "text": "Hello!",
+    "sentOn": "2022-08-29T10:01:31.552Z"
+  },
+  {
+    "fromUser": "literally-me",
+    "toUser": "0851a9c3-cb25-4ba9-9112-0a6a73dee0c7",
+    "text": "Hi! Tell me a joke.",
+    "sentOn": "2022-08-29T10:01:31.552Z"
+  },
+  {
+    "fromUser": "0851a9c3-cb25-4ba9-9112-0a6a73dee0c7",
+    "toUser": "literally-me",
+    "text": "Get back to work!",
+    "sentOn": "2022-08-29T10:01:31.552Z"
+  }
+]
