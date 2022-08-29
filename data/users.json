@@ -1,0 +1,32 @@
+[
+  {
+    "id": "dc5fd42e-700e-445d-a334-5f4c13192565",
+    "name": "Toni Flores",
+    "picture": "https://randomuser.me/api/portraits/thumb/women/55.jpg"
+  },
+  {
+    "id": "39ce91db-2c1a-4c21-a898-672c2fdf6875",
+    "name": "Josephine Fernandez",
+    "picture": "https://randomuser.me/api/portraits/thumb/women/61.jpg"
+  },
+  {
+    "id": "82921ea4-76df-4432-9cdc-ec4a9cea70a9",
+    "name": "Sandra Hayes",
+    "picture": "https://randomuser.me/api/portraits/thumb/women/52.jpg"
+  },
+  {
+    "id": "69ae48e6-8bf7-4a7c-8776-36db9a2d4479",
+    "name": "Miguel Robertson",
+    "picture": "https://randomuser.me/api/portraits/thumb/men/27.jpg"
+  },
+  {
+    "id": "0851a9c3-cb25-4ba9-9112-0a6a73dee0c7",
+    "name": "Cindy Hall",
+    "picture": "https://randomuser.me/api/portraits/thumb/women/78.jpg"
+  },
+  {
+    "id": "literally-me",
+    "name": "",
+    "picture": "assets/images/no-profile-picture.jpg"
+  }
+]
